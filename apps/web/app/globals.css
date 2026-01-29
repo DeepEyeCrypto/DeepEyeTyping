@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+:root {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --bg-deep: #05050a;
+}
+
+@theme {
+  --color-glass-100: rgba(255, 255, 255, 0.05);
+  --color-glass-200: rgba(255, 255, 255, 0.1);
+  --color-glass-300: rgba(255, 255, 255, 0.2);
+
+  --color-neon-cyan: #00fff2;
+  --color-neon-purple: #bc13fe;
+  --color-neon-blue: #131afe;
+
+  --color-dark-bg: #05050a;
+  --color-dark-surface: #0a0a12;
+
+  --shadow-neon-cyan: 0 0 10px rgba(0, 255, 242, 0.5), 0 0 20px rgba(0, 255, 242, 0.3);
+  --shadow-neon-purple: 0 0 10px rgba(188, 19, 254, 0.5), 0 0 20px rgba(188, 19, 254, 0.3);
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-deep);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- LIQUID GLASS UTILITIES --- */
+
+@layer components {
+
+  .glass-panel {
+    @apply bg-glass-100 backdrop-blur-xl border border-glass-200 shadow-xl;
+  }
+
+  .glass-card {
+    @apply bg-glass-100 backdrop-blur-xl border border-glass-200 shadow-xl;
+    @apply rounded-2xl p-6 transition-all duration-300;
+  }
+
+  .glass-card:hover {
+    @apply bg-glass-200 border-glass-300 transform scale-[1.01];
+  }
+
+  .neon-text {
+    @apply text-neon-cyan;
+    filter: drop-shadow(0 0 5px rgba(0, 255, 242, 0.6));
+  }
+
+  .btn-primary {
+    @apply px-6 py-2 rounded-lg font-bold text-black bg-neon-cyan shadow-neon-cyan transition-all duration-300 hover:bg-white hover:scale-105 active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply px-6 py-2 rounded-lg font-medium text-white/70 hover:text-white hover:bg-glass-100 transition-all;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
