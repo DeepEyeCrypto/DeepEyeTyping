@@ -23,7 +23,7 @@ We use the new Tailwind v4 engine.
 
 - **Auth:** Uses `onAuthStateChanged` in a `useEffect` inside `SideNav` (or `App`).
 - **Data:** Stats are saved to `/users/{uid}/sessions/{sessionId}`.
-- **Security:** (TODO) Add Firestore Rules to allow only `request.auth.uid == userId`.
+- **Security:** Firestore Rules configured in `firestore.rules` to strictly enforce `request.auth.uid == userId`.
 
 ### 4. Sound Engine
 
