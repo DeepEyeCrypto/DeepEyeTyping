@@ -52,7 +52,7 @@ export const LessonSelector = () => {
 
             {/* Scrollable Protocol Grid */}
             <div className="w-full relative">
-                <div className="flex gap-5 overflow-x-auto pb-8 pt-2 scrollbar-hide snap-x">
+                <div className="flex gap-5 overflow-x-auto pb-8 pt-2 scrollbar-hide snap-x px-1 [mask-image:linear-gradient(to_right,rgba(0,0,0,0),rgba(0,0,0,1)_20px,rgba(0,0,0,1)_calc(100%-20px),rgba(0,0,0,0))]">
                     <AnimatePresence mode="popLayout">
                         {filteredLessons.map((lesson) => (
                             <motion.div
@@ -75,10 +75,6 @@ export const LessonSelector = () => {
                         </div>
                     )}
                 </div>
-
-                {/* Edge Fades */}
-                <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-dark-bg/0 to-transparent pointer-events-none" />
-                <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-dark-bg to-transparent pointer-events-none" />
             </div>
         </div>
     );
