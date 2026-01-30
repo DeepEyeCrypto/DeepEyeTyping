@@ -1,71 +1,79 @@
-# DeepEye.Typing
+# DeepEye.Typing: Neural Interface Training Protocol
 
-> **Advanced Neural Interface Training Protocol**  
-> *Next-Gen Typing Tutor built with React 19, Tauri v2, and Liquid Glass UI.*
+[![DeepEye Banner](https://via.placeholder.com/1200x400/05050a/00fff2?text=DeepEye.Typing+Neural+Sync)](https://deepeye.systems)
 
-![DeepEye Banner](https://via.placeholder.com/1200x400/05050a/00fff2?text=DeepEye.Typing+Protocol)
-
-## 🌟 Core Features
-
-- **Liquid Glass Aesthetic:** Premium cyberpunk visuals with real-time blur and neon glows.
-- **Neural Engine:** Custom typing logic with character-level tracking (Zustand).
-- **Virtual Keyboard:** Real-time visual feedback with finger-guide indicators.
-- **Sound Synthesis:** Procedural WebAudio SFX (no external assets required).
-- **Cloud Sync:** Firebase Auth & Firestore integration for cross-device stats.
-- **Desktop Native:** Built on Tauri v2 for high-performance desktop experience.
-
-## 🏗 Architecture (Monorepo)
-
-This project uses `pnpm workspaces` to separate concerns:
-
-- `apps/desktop`: The main Tauri + Vite React Application.
-- `apps/web`: (Placeholder) Next.js marketing site.
-- `packages/core`: Shared Logic (Store, Auth, Config, Sound).
-- `packages/ui`: Shared Design Tokens (Tailwind Config).
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js 20+
-- pnpm (`npm install -g pnpm`)
-- Rust (for Tauri builds)
-
-### Installation
-
-```bash
-# 1. Install dependencies
-pnpm install
-
-# 2. Configure Firebase
-# Open packages/core/src/firebase/config.ts and replace placeholder keys.
-```
-
-### Development
-
-```bash
-# Run the desktop app in dev mode (Browser View)
-cd apps/desktop
-npm run dev
-
-# Run the Tauri window (Native View)
-npm run tauri dev
-```
-
-## ⌨️ Controls
-
-- **Lesson Selector:** Top carousel to switch drills.
-- **Settings:** Mute audio or toggle "High Performance" visual mode.
-- **Auth:** Click "Connect Identity" to sync stats to Cloud.
-
-## 🛠 Tech Stack
-
-- **Framework:** React 19
-- **Build Tool:** Vite 6
-- **Styling:** Tailwind CSS 4 + Framer Motion
-- **State:** Zustand (with Persist)
-- **Backend:** Firebase (Auth + Firestore)
-- **Container:** Tauri v2
+## 📡 Terminal Status: **STABLE**
+>
+> **"Master your interface. Conquer the neural link."**
+> Next-Gen Typing Performance Suite built with React 19, Tauri v2, and the Liquid Glass Design System.
 
 ---
-*Built by the DeepEye Agentic Engineering Team.*
+
+## 🌟 Advanced Operative Features
+
+- **Liquid Glass Aesthetic:** Premium Vision Pro-inspired UI with real-time blur, neon flows, and 60FPS animations.
+- **Neural Analytics Engine:** caracter-level tracking with AI-powered diagnostics for rhythm, hesitation, and speed traps.
+- **Global Standing Protocol:** Real-time global leaderboards synchronized via Firebase.
+- **God Mode Protocol:** Intense visual feedback and screen-shake for error detection during high-velocity drills.
+- **Certification Exams:** Strict "Sudden Death" typing tests (Alpha, Beta Classes) to validate your operative tier.
+- **Gamification & Honors:** Earn XP, gain Clearance Levels, and unlock holographic Badges.
+- **Sound Synthesis:** Procedural WebAudio SFX engine providing tactile haptic-style feedback.
+- **Cloud Infrastructure:** Cross-device sync for stats, progress, and rankings via Firebase.
+
+---
+
+## 🏗 System Architecture (Monorepo)
+
+- **`apps/desktop`**: The primary High-Performance Tauri + Vite React client.
+- **`apps/web`**: High-fidelity Next.js 15 marketing and documentation platform.
+- **`packages/core`**: The project's brain. Shared state (Zustand), analytics, and cloud adapters.
+- **`packages/ui`**: Shared Design Tokens and Liquid Glass CSS utility classes.
+
+---
+
+## 🚀 Deployment & Development
+
+### 🛠 Prerequisites
+
+- Node.js 20+
+- Rust (for Tauri Native Builds)
+- Firebase Account (for Cloud Sync)
+
+### ⚡ Installation
+
+```bash
+npm install
+```
+
+### 💻 Running the Protocol
+
+```bash
+# Start Native Desktop Environment
+npm run tauri dev -w desktop
+
+# Start Web Landing Platform
+npm run dev -w web
+```
+
+---
+
+## ⌨️ Interface Controls
+
+| Key | Protocol Function |
+|:---:|:---|
+| `ESC` | Reset Neural Buffer |
+| `TAB` | Cycle Protocol Protocols |
+| `AUTH` | Initialize Cloud Identity Sync |
+| `GOD` | Toggle High-Velocity Feedback Mode |
+
+---
+
+## 💿 Built With
+
+- **Logic**: React 19 + TypeScript
+- **Velocity**: Vite 6 + Tauri v2
+- **Styling**: Tailwind CSS v4 + Framer Motion
+- **Persistence**: Zustand + Firebase (Auth/Firestore)
+
+---
+*DeepEye.Typing is a research-grade typing protocol developed by the DeepEye Agentic Engineering Division.*

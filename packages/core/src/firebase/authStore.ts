@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { User, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, signOut, onAuthStateChanged } from 'firebase/auth';
+import { type User, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, signInAnonymously as firebaseSignInAnonymously, signOut, onAuthStateChanged } from 'firebase/auth';
 import { auth } from './config';
 
 interface AuthState {
@@ -10,6 +10,7 @@ interface AuthState {
     initialize: () => () => void; // Returns unsubscribe
     signInWithGoogle: () => Promise<void>;
     signInWithGithub: () => Promise<void>;
+    signInAnonymously: () => Promise<void>;
     logout: () => Promise<void>;
 }
 
@@ -40,6 +41,15 @@ export const useAuthStore = create<AuthState>((set) => ({
         try {
             const provider = new GithubAuthProvider();
             await signInWithPopup(auth, provider);
+        } catch (err: any) {
+            set({ error: err.message, loading: false });
+        }
+    },
+
+    signInAnonymously: async () => {
+        set({ loading: true, error: null });
+        try {
+            await firebaseSignInAnonymously(auth);
         } catch (err: any) {
             set({ error: err.message, loading: false });
         }

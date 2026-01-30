@@ -1,0 +1,42 @@
+name: Quality Gate
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Neural Lint (Performance & Standards)
+        run: npm run lint
+
+      - name: Build Application (Optimized Bundle)
+        run: npm run build --workspace=desktop
+
+      - name: Verify Performance Budget
+        run: |
+          # Simple check for the main index file size
+          MAIN_JS=$(ls apps/desktop/dist/assets/index-*.js | head -n 1)
+          SIZE=$(stat -c%s "$MAIN_JS")
+          MAX_SIZE=50000 # 50kB budget for main logic
+          
+          echo "Main Logic Chunk Size: $SIZE bytes"
+          if [ "$SIZE" -gt "$MAX_SIZE" ]; then
+            echo "ERROR: Performance budget exceeded ($SIZE > $MAX_SIZE bytes)"
+            exit 1
+          fi
+          echo "Performance budget cleared."

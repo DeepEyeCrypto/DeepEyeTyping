@@ -2,6 +2,7 @@
     --color-glass-100: rgba(255, 255, 255, 0.05);
     --color-glass-200: rgba(255, 255, 255, 0.1);
     --color-glass-300: rgba(255, 255, 255, 0.2);
+    --color-glass-heavy: rgba(10, 10, 20, 0.6);
 
     --color-neon-cyan: #00fff2;
     --color-neon-purple: #bc13fe;
@@ -12,11 +13,29 @@
 
     --shadow-neon-cyan: 0 0 10px rgba(0, 255, 242, 0.5), 0 0 20px rgba(0, 255, 242, 0.3);
     --shadow-neon-purple: 0 0 10px rgba(188, 19, 254, 0.5), 0 0 20px rgba(188, 19, 254, 0.3);
+
+    @keyframes float {
+        0% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+    }
 }
 
 @layer components {
     .glass-panel {
         @apply bg-glass-100 backdrop-blur-xl border border-glass-200 shadow-xl;
+    }
+
+    .glass-heavy {
+        @apply bg-glass-heavy backdrop-blur-3xl border border-white/10 shadow-2xl;
     }
 
     .glass-card {
@@ -26,6 +45,10 @@
 
     .glass-card:hover {
         @apply bg-glass-200 border-glass-300 transform scale-[1.01];
+    }
+
+    .glass-dock {
+        @apply bg-black/30 backdrop-blur-2xl border border-white/10 rounded-full py-4 shadow-2xl;
     }
 
     .neon-text {
@@ -39,5 +62,9 @@
 
     .btn-ghost {
         @apply px-6 py-2 rounded-lg font-medium text-white/70 hover:text-white hover:bg-glass-100 transition-all;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
     }
 }

@@ -1,9 +1,9 @@
-export type Finger = 'L_PINKY' | 'L_RING' | 'L_MIDDLE' | 'L_INDEX' | 'L_THUMB' | 'R_THUMB' | 'R_INDEX' | 'R_MIDDLE' | 'R_RING' | 'R_PINKY';
+export type FingerMapping = 'L_PINKY' | 'L_RING' | 'L_MIDDLE' | 'L_INDEX' | 'L_THUMB' | 'R_THUMB' | 'R_INDEX' | 'R_MIDDLE' | 'R_RING' | 'R_PINKY';
 
 export interface KeyConfig {
     code: string; // DOM Key code like "KeyA"
     label: string;
-    finger: Finger;
+    finger: FingerMapping;
     row: number; // 0-4 (0 is number row)
     width?: number; // Relative width (1 = standard)
 }

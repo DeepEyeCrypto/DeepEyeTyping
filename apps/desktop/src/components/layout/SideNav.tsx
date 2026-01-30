@@ -1,15 +1,56 @@
-// File: apps/desktop/src/components/layout/SideNav.tsx
-import { useEffect } from 'react';
-import { Home, Keyboard, BarChart2, Settings, User, LogIn, LogOut } from 'lucide-react';
+import React, { useEffect, useCallback, memo } from 'react';
+import { Home, Keyboard, BarChart2, Settings, Trophy, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useAuthStore, useNavigationStore } from '../../../../../packages/core'; // Relative import
+import { useAuthStore, useNavigationStore, soundManager } from 'core';
 
 const navItems = [
     { icon: Home, label: 'Dashboard', id: 'dashboard' },
     { icon: Keyboard, label: 'Train', id: 'train' },
     { icon: BarChart2, label: 'Stats', id: 'stats' },
+    { icon: Trophy, label: 'Honors', id: 'achievements' },
+    { icon: Globe, label: 'Ranking', id: 'leaderboard' },
     { icon: Settings, label: 'Settings', id: 'settings' },
 ] as const;
+
+type NavItemId = typeof navItems[number]['id'];
+
+const SIDEBAR_VARIANTS = {
+    hidden: { x: -20, opacity: 0 },
+    visible: { x: 0, opacity: 1 }
+};
+
+const NavButton = memo(({ item, isActive, onClick }: {
+    item: { icon: React.ElementType, label: string, id: NavItemId },
+    isActive: boolean,
+    onClick: (id: NavItemId) => void
+}) => {
+    const handleClick = useCallback(() => onClick(item.id), [item.id, onClick]);
+
+    return (
+        <button
+            onClick={handleClick}
+            className={`
+                relative w-12 h-12 flex items-center justify-center rounded-xl transition-all duration-200 group
+                hover:bg-glass-200 hover:shadow-lg
+                ${isActive ? 'bg-glass-200 border border-neon-cyan/30' : 'text-white/40'}
+            `}
+        >
+            <item.icon className={`w-6 h-6 transition-colors ${isActive ? 'text-neon-cyan' : 'group-hover:text-white'}`} />
+
+            <div className="absolute left-16 px-2 py-1 bg-black/80 backdrop-blur-md rounded border border-white/10 text-[10px] uppercase tracking-widest text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                {item.label}
+            </div>
+
+            {/* Active Indicator */}
+            {isActive && (
+                <motion.div
+                    layoutId="active-nav"
+                    className="absolute -left-1 w-1 h-6 bg-neon-cyan rounded-r-full shadow-neon-cyan"
+                />
+            )}
+        </button>
+    );
+});
 
 export const SideNav = () => {
     const { user, initialize, signInWithGoogle, logout, loading } = useAuthStore();
@@ -21,96 +62,64 @@ export const SideNav = () => {
         return () => unsubscribe();
     }, [initialize]);
 
+    const handleGoogleLogin = useCallback(() => signInWithGoogle(), [signInWithGoogle]);
+    const handleLogout = useCallback(() => logout(), [logout]);
+    const handleSetView = useCallback((id: NavItemId) => {
+        soundManager.playNavigation();
+        setView(id);
+    }, [setView]);
+
     return (
         <motion.aside
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            className="w-20 lg:w-64 h-full glass-panel border-r border-glass-200 flex flex-col items-center lg:items-start py-8 z-20"
+            initial="hidden"
+            animate="visible"
+            variants={SIDEBAR_VARIANTS}
+            className="fixed left-6 top-1/2 -translate-y-1/2 w-16 glass-dock flex flex-col items-center gap-8 z-50 py-10 overflow-visible"
         >
-            {/* Logo Area */}
-            <div className="mb-10 px-0 lg:px-6 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-neon-cyan/20 flex items-center justify-center border border-neon-cyan/50 shadow-neon-cyan">
-                    <span className="text-neon-cyan font-bold text-xl">D</span>
-                </div>
-                <span className="hidden lg:block font-bold text-xl tracking-wider text-white">
-                    DeepEye
-                </span>
+            {/* Neural Logo */}
+            <div className="w-10 h-10 rounded-full bg-neon-cyan/20 flex items-center justify-center border border-neon-cyan/50 shadow-neon-cyan cursor-pointer hover:scale-110 transition-transform">
+                <span className="text-neon-cyan font-bold text-xl">D</span>
             </div>
 
-            {/* Nav Links */}
-            <nav className="flex-1 w-full flex flex-col gap-2 px-2 lg:px-4">
-                {navItems.map((item) => {
-                    const isActive = currentView === item.id;
-                    return (
-                        <button
-                            key={item.id}
-                            onClick={() => setView(item.id as any)}
-                            className={`
-                relative w-full flex items-center gap-4 px-3 py-3 rounded-xl transition-all duration-200 group
-                hover:bg-glass-200 hover:shadow-lg
-                ${isActive ? 'bg-glass-200 border border-neon-cyan/30' : 'text-white/60'}
-              `}
-                        >
-                            <item.icon className={`w-6 h-6 transition-colors ${isActive ? 'text-neon-cyan' : 'group-hover:text-white'}`} />
-                            <span className={`hidden lg:block font-medium ${isActive ? 'text-white' : 'group-hover:text-white'}`}>
-                                {item.label}
-                            </span>
-
-                            {/* Active Indicator */}
-                            {isActive && (
-                                <motion.div
-                                    layoutId="active-nav"
-                                    className="absolute left-0 w-1 h-8 bg-neon-cyan rounded-r-full"
-                                />
-                            )}
-                        </button>
-                    );
-                })}
+            {/* Nav Symbols */}
+            <nav className="flex-1 w-full flex flex-col gap-6 items-center">
+                {navItems.map((item) => (
+                    <NavButton
+                        key={item.id}
+                        item={item}
+                        isActive={currentView === item.id}
+                        onClick={handleSetView}
+                    />
+                ))}
             </nav>
 
-            {/* User Section */}
-            <div className="mt-auto px-2 lg:px-4 w-full">
-                {user ? (
-                    // Logged In State
-                    <div className="flex flex-col gap-2">
-                        <div className="w-full flex items-center gap-3 p-3 rounded-xl bg-glass-200 border border-glass-300">
+            {/* User Access Terminal */}
+            <div className="mt-auto flex flex-col items-center gap-4">
+                {user && !user.isAnonymous ? (
+                    <div className="relative group">
+                        <button
+                            onClick={handleLogout}
+                            className="w-10 h-10 rounded-full border border-white/10 overflow-hidden hover:border-red-500/50 transition-colors"
+                        >
                             {user.photoURL ? (
-                                <img src={user.photoURL} alt="User" className="w-8 h-8 rounded-full border border-neon-cyan" />
+                                <img src={user.photoURL} alt="User" className="w-full h-full object-cover" />
                             ) : (
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-neon-purple to-neon-blue flex items-center justify-center">
-                                    <span className="text-xs font-bold">{user.email?.[0].toUpperCase()}</span>
+                                <div className="w-full h-full bg-neon-purple/20 flex items-center justify-center text-neon-purple font-bold">
+                                    {user.email?.[0].toUpperCase()}
                                 </div>
                             )}
-                            <div className="hidden lg:flex flex-col items-start overflow-hidden">
-                                <span className="text-sm font-bold text-white truncate max-w-[100px]">{user.displayName || 'Agent'}</span>
-                                <span className="text-xs text-neon-cyan">Online</span>
-                            </div>
-                        </div>
-
-                        <button
-                            onClick={() => logout()}
-                            className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-red-500/20 text-white/50 hover:text-red-400 transition-all text-xs"
-                        >
-                            <LogOut size={14} />
-                            <span className="hidden lg:inline">Disconnect Signal</span>
                         </button>
+                        <div className="absolute left-14 top-1/2 -translate-y-1/2 px-3 py-1 bg-black/80 backdrop-blur-md rounded-md text-[10px] text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10 uppercase tracking-widest">
+                            Terminate Session
+                        </div>
                     </div>
                 ) : (
-                    // Guest State
                     <button
-                        onClick={() => signInWithGoogle()}
+                        onClick={handleGoogleLogin}
                         disabled={loading}
-                        className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-neon-cyan/20 border border-transparent hover:border-neon-cyan/50 transition-all group"
+                        className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-neon-cyan hover:border-neon-cyan/50 hover:bg-neon-cyan/10 transition-all font-mono text-[10px] font-bold"
                     >
-                        <div className="w-8 h-8 rounded-full bg-glass-200 flex items-center justify-center group-hover:bg-neon-cyan/20 group-hover:text-neon-cyan transition-colors">
-                            <LogIn size={16} />
-                        </div>
-                        <div className="hidden lg:flex flex-col items-start">
-                            <span className="text-sm font-bold text-white group-hover:text-neon-cyan transition-colors">
-                                {loading ? 'Initializing...' : 'Connect Identity'}
-                            </span>
-                            <span className="text-xs text-white/50">Google / GitHub</span>
-                        </div>
+                        AUTH
                     </button>
                 )}
             </div>

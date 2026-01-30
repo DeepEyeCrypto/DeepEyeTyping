@@ -1,18 +1,38 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { getAnalytics } from 'firebase/analytics';
 
 // TODO: Replace these with your actual Firebase Console keys
 // or use Environment Variables (Recommended)
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY_HERE",
-    authDomain: "deepeyedemo.firebaseapp.com",
-    projectId: "deepeyedemo",
-    storageBucket: "deepeyedemo.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "1:123456789:web:abcdef123456"
+    apiKey: "AIzaSyBRhG5tNE2CRUHUfvTDI9odIC7dKvf4DW0",
+    authDomain: "typingpro-da12c.firebaseapp.com",
+    projectId: "typingpro-da12c",
+    storageBucket: "typingpro-da12c.firebasestorage.app",
+    messagingSenderId: "296757654836",
+    appId: "1:296757654836:web:40d7225d708041276aa161",
+    measurementId: "G-FG0JGMHBQ2"
 };
 
-export const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+let app;
+let auth: any;
+let db: any;
+let analytics: any;
+
+try {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    // Only initialize analytics in browser environment
+    if (typeof window !== 'undefined') {
+        analytics = getAnalytics(app);
+    }
+} catch (e) {
+    console.error("Firebase Init Error:", e);
+    // Dummy objects to prevent null errors elsewhere
+    auth = { onAuthStateChanged: () => () => { } } as any;
+    db = {} as any;
+}
+
+export { app, auth, db, analytics };

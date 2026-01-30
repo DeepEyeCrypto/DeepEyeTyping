@@ -1,0 +1,31 @@
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/dashboard/DashboardPage.tsx
+  73:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  73:83  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/stats/StatsPage.tsx
+  127:38  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  127:63  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  179:80  error  JSX attribute values should not contain Arrays created in the same scope   react-perf/jsx-no-new-array-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/typing/TypingArea.tsx
+  124:9   error  'reset' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  136:36  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/typing/TypingArea.tsx:136:36
+  134 |     const containerRef = useRef<HTMLDivElement>(null);
+  135 |     const prevErrorCount = useRef(errorCount);
+> 136 |     const isMistake = errorCount > prevErrorCount.current;
+      |                                    ^^^^^^^^^^^^^^^^^^^^^^ Cannot access ref value during render
+  137 |
+  138 |     const cursorAnimation = useMemo(() => ({
+  139 |         x: cursorRect.x,  react-hooks/refs
+  149:13  error  'activeChar' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/typing/VirtualKeyboard.tsx
+  93:41  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+
+✖ 9 problems (9 errors, 0 warnings)
+

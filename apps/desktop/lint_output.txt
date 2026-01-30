@@ -1,0 +1,37 @@
+
+> desktop@0.0.0 lint
+> eslint .
+
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/dashboard/DashboardPage.tsx
+   95:34  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  101:34  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  128:38  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/layout/SideNav.tsx
+  57:38  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/settings/SettingsPage.tsx
+  63:34  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/stats/StatsPage.tsx
+   73:39  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   79:39  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   84:47  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   85:44  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   86:45  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   93:38  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   94:44  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  124:44  error  JSX attribute values should not contain Arrays created in the same scope   react-perf/jsx-no-new-array-as-prop
+  126:47  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  127:44  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+
+✖ 15 problems (10 errors, 5 warnings)
+
+npm error Lifecycle script `lint` failed with error:
+npm error code 1
+npm error path /Users/enayat/Documents/DeepEyeTyping/apps/desktop
+npm error workspace desktop@0.0.0
+npm error location /Users/enayat/Documents/DeepEyeTyping/apps/desktop
+npm error command failed
+npm error command sh -c eslint .
