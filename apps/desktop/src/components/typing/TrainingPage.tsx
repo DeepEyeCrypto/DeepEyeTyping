@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useTypingStore, useProgressStore } from 'core';
 import { LessonSelector } from './LessonSelector';
 import { TypingArea } from './TypingArea';
