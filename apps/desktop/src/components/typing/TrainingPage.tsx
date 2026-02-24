@@ -21,17 +21,17 @@ export const TrainingPage = () => {
     const level = useProgressStore(state => state.level);
     const [showTemplateSelector, setShowTemplateSelector] = useState(true);
 
-    const handleBack = () => {
+    const handleBack = useCallback(() => {
         setText("", "practice", undefined); // Clear lesson to go back
-    };
+    }, [setText]);
 
-    const handleTemplateSelect = () => {
+    const handleTemplateSelect = useCallback(() => {
         setShowTemplateSelector(false);
-    };
+    }, []);
 
-    const handleBackToTemplates = () => {
+    const handleBackToTemplates = useCallback(() => {
         setShowTemplateSelector(true);
-    };
+    }, []);
 
     return (
         <div className="w-full h-full flex flex-col relative overflow-hidden">

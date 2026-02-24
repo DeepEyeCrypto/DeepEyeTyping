@@ -40,48 +40,72 @@ const INITIAL_WIDTH = { width: 0 };
 const ComplexityDisplay = memo(({ text }: { text: string }) => {
     const analysis = useMemo(() => calculateComplexity(text), [text]);
 
+    const animateWidth = useMemo(() => ({ width: `${analysis.score}%` }), [analysis.score]);
+    const transition = useMemo(() => ({ duration: 1.5, ease: "circOut" }), []);
+
     return (
-        <div className="glass-card bg-black/40 border-white/5 flex flex-col gap-6 p-8 rounded-[32px]">
-            <div className="flex justify-between items-end">
+        <div className="glass-card bg-black/40 border-white/5 flex flex-col gap-8 p-10 rounded-[48px] shadow-2xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-neon-cyan/5 blur-[80px] -z-10 rounded-full group-hover:bg-neon-cyan/10 transition-colors duration-700" />
+
+            <div className="flex justify-between items-start">
                 <div className="flex flex-col gap-1">
-                    <span className="text-[9px] uppercase font-black text-white/30 tracking-[0.2em]">Neural Resistance</span>
+                    <span className="text-[9px] uppercase font-black text-white/30 tracking-[0.4em]">Neural Resistance</span>
                     <div className="flex items-baseline gap-2">
-                        <span className="text-4xl font-extrabold text-neon-cyan italic">{analysis.score}</span>
+                        <span className="text-5xl font-black text-neon-cyan italic drop-shadow-[0_0_15px_rgba(0,255,242,0.3)]">{analysis.score}</span>
                         <span className="text-[10px] font-bold text-white/20 uppercase">Index</span>
                     </div>
                 </div>
-                <div className={`px-4 py-1.5 rounded-full border text-[9px] font-black uppercase tracking-widest ${analysis.level === 'FLOW STATE' ? 'bg-neon-purple/20 border-neon-purple text-neon-purple' :
-                    analysis.level === 'SPEED' ? 'bg-orange-500/20 border-orange-500 text-orange-500' :
-                        analysis.level === 'ACCURACY' ? 'bg-neon-cyan/20 border-neon-cyan text-neon-cyan' :
-                            'bg-white/10 border-white/20 text-white/40'
-                    }`}>
-                    {analysis.level} PROTOCOL
+                <div className="flex flex-col gap-2 items-end">
+                    <span className="text-[9px] uppercase font-black text-white/30 tracking-[0.3em]">Protocol Level</span>
+                    <div className={`px-5 py-2 rounded-full border text-[9px] font-black uppercase tracking-widest shadow-lg transition-all duration-500 ${analysis.level === 'FLOW STATE' ? 'bg-neon-purple/20 border-neon-purple text-neon-purple shadow-neon-purple/20' :
+                        analysis.level === 'SPEED' ? 'bg-orange-500/20 border-orange-500 text-orange-500 shadow-orange-500/10' :
+                            analysis.level === 'ACCURACY' ? 'bg-neon-cyan/20 border-neon-cyan text-neon-cyan shadow-neon-cyan/20' :
+                                'bg-white/5 border-white/10 text-white/40'
+                        }`}>
+                        {analysis.level}
+                    </div>
                 </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1 p-4 bg-white/2 rounded-2xl border border-white/5">
-                    <span className="text-[8px] uppercase font-black text-white/20 tracking-widest">Symbol Load</span>
-                    <span className="text-sm font-mono font-bold text-white">{analysis.stats.symbols} <span className="text-[9px] opacity-40">Chars</span></span>
+                <div className="flex flex-col gap-1.5 p-5 bg-white/2 rounded-3xl border border-white/5 group/link hover:border-white/10 transition-colors">
+                    <span className="text-[8px] uppercase font-black text-white/20 tracking-[.25em] flex items-center gap-2">
+                        <Activity size={10} className="text-white/40" />
+                        Symbol Load
+                    </span>
+                    <span className="text-sm font-mono font-black text-white">{analysis.stats.symbols} <span className="text-[9px] opacity-40">Chars</span></span>
                 </div>
-                <div className="flex flex-col gap-1 p-4 bg-white/2 rounded-2xl border border-white/5">
-                    <span className="text-[8px] uppercase font-black text-white/20 tracking-widest">Cap Density</span>
-                    <span className="text-sm font-mono font-bold text-white">{Math.round(analysis.stats.density * 100)}%</span>
+                <div className="flex flex-col gap-1.5 p-5 bg-white/2 rounded-3xl border border-white/5 group/link hover:border-white/10 transition-colors">
+                    <span className="text-[8px] uppercase font-black text-white/20 tracking-[.25em] flex items-center gap-2">
+                        <BarChart3 size={10} className="text-white/40" />
+                        Cap Density
+                    </span>
+                    <span className="text-sm font-mono font-black text-white">{Math.round(analysis.stats.density * 100)}%</span>
                 </div>
             </div>
 
-            <div className="space-y-2">
-                <div className="flex justify-between items-center text-[10px] font-bold text-white/40 uppercase tracking-widest">
-                    <span>Sync Difficulty</span>
-                    <span>{analysis.score}%</span>
+            <div className="space-y-4">
+                <div className="flex justify-between items-center text-[10px] font-black text-white/40 uppercase tracking-[0.4em]">
+                    <span>Difficulty Threshold</span>
+                    <span className="text-neon-cyan">{analysis.score}%</span>
                 </div>
-                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden p-0.5 border border-white/10">
+                <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden p-0.5 border border-white/10 relative">
                     <motion.div
                         initial={INITIAL_WIDTH}
-                        animate={useMemo(() => ({ width: `${analysis.score}%` }), [analysis.score])}
-                        className={`h-full rounded-full ${analysis.score > 70 ? 'bg-neon-purple shadow-[0_0_10px_rgba(188,19,254,0.5)]' : 'bg-neon-cyan shadow-[0_0_10px_rgba(0,255,242,0.5)]'}`}
+                        animate={animateWidth}
+                        transition={transition}
+                        className={`h-full rounded-full transition-all duration-700 ${analysis.score > 70
+                            ? 'bg-gradient-to-r from-neon-purple to-neon-cyan shadow-[0_0_20px_rgba(188,19,254,0.5)]'
+                            : 'bg-gradient-to-r from-neon-cyan to-neon-purple shadow-[0_0_20px_rgba(0,255,242,0.4)]'
+                            }`}
                     />
                 </div>
+            </div>
+
+            <div className="pt-2">
+                <p className="text-[9px] text-white/15 font-mono italic leading-relaxed uppercase tracking-[0.15em]">
+                    // SYNCHRONIZATION_METRICS_V2.0
+                </p>
             </div>
         </div>
     );
@@ -113,7 +137,7 @@ export const ProtocolArchitect = () => {
         setView('train');
     }, [text, setText, setView]);
 
-    const handleSave = async () => {
+    const handleSave = useCallback(async () => {
         const user = auth.currentUser;
         if (!user) return;
         setLoading(true);
@@ -135,7 +159,7 @@ export const ProtocolArchitect = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [title, description, text, isPublic, difficulty, setView]);
 
     return (
         <div className="flex flex-col gap-10 w-full max-w-7xl mx-auto py-12 px-6">

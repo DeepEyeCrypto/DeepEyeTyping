@@ -22,6 +22,7 @@ const AppShellComponent = ({ children }: AppShellProps) => {
 
     const handlePaletteClose = useCallback(() => setIsPaletteOpen(false), []);
     const handlePaletteOpen = useCallback(() => setIsPaletteOpen(true), []);
+    const handleMobileMenuToggle = useCallback(() => setIsMobileMenuOpen(prev => !prev), []);
 
     // Check for mobile viewport
     useEffect(() => {
@@ -71,7 +72,7 @@ const AppShellComponent = ({ children }: AppShellProps) => {
             {/* Mobile Menu Button */}
             {isMobile && (
                 <button
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    onClick={handleMobileMenuToggle}
                     className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-white/10 backdrop-blur-lg border border-white/10 text-white hover:text-neon-cyan hover:border-neon-cyan/50 transition-colors"
                 >
                     {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}

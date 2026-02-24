@@ -197,7 +197,7 @@ const DashboardChart = memo(({ sessions }: { sessions: TypingSession[] }) => {
     return (
         <motion.div
             variants={FADE_IN_UP}
-            className="flex-1 glass-card border-white/5 bg-black/40 p-0 overflow-hidden relative min-h-[300px] flex flex-col rounded-[40px] shadow-2xl"
+            className="w-full glass-card border-white/5 bg-black/40 p-0 overflow-hidden relative h-[400px] min-h-[400px] flex flex-col rounded-[40px] shadow-2xl shrink-0"
         >
             <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/2">
                 <div className="flex items-center gap-3">
@@ -290,8 +290,7 @@ export const DashboardPage = () => {
     const { user } = useAuthStore();
     const { sessions } = useStats();
     // Fix: badges is the store property, unlockedBadges was undefined. lifetimeStats is also missing in store, defaulting it.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { level, xp, badges: unlockedBadges = [], lifetimeStats = { maxWpm: 0, raceWins: 0 } } = useProgressStore() as any;
+    const { level, xp, badges: unlockedBadges = [], lifetimeStats = { maxWpm: 0, raceWins: 0 } } = useProgressStore();
     const { setText } = useTypingStore();
     const { setView } = useNavigationStore();
     const [logs, setLogs] = useState<string[]>([]);
@@ -334,7 +333,7 @@ export const DashboardPage = () => {
     const recommendedLessons = useMemo(() => LESSONS.slice(0, 4), []);
 
     return (
-        <div className="flex flex-col xl:flex-row gap-10 min-h-full w-full max-w-7xl mx-auto py-8">
+        <div className="flex flex-col xl:flex-row xl:items-start gap-10 min-h-full w-full max-w-7xl mx-auto py-8">
 
             {/* --- MAIN OPERATIVE HUB (Left/Center) --- */}
             <div className="w-full xl:flex-[2.5] flex flex-col gap-10 pb-10">

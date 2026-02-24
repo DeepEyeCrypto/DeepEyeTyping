@@ -34,22 +34,30 @@ const SegmentedControl = <T extends string>({ options, active, onChange, colorCl
     active: T,
     onChange: (val: T) => void,
     colorClass: string
-}) => (
-    <div className="flex bg-black/40 p-1.5 rounded-2xl border border-white/5 gap-1">
-        {options.map((opt) => (
-            <button
-                key={opt}
-                onClick={() => onChange(opt)}
-                className={`
-                    px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all
-                    ${active === opt ? `${colorClass} bg-white/5 shadow-xl` : 'text-white/20 hover:text-white/40'}
-                `}
-            >
-                {opt}
-            </button>
-        ))}
-    </div>
-);
+}) => {
+    const handleClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+        const val = e.currentTarget.getAttribute('data-value') as T;
+        if (val) onChange(val);
+    }, [onChange]);
+
+    return (
+        <div className="flex bg-black/40 p-1.5 rounded-2xl border border-white/5 gap-1">
+            {options.map((opt) => (
+                <button
+                    key={opt}
+                    data-value={opt}
+                    onClick={handleClick}
+                    className={`
+                        px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all
+                        ${active === opt ? `${colorClass} bg-white/5 shadow-xl` : 'text-white/20 hover:text-white/40'}
+                    `}
+                >
+                    {opt}
+                </button>
+            ))}
+        </div>
+    );
+};
 
 // --- MAIN COMPONENT ---
 
@@ -86,6 +94,35 @@ export const SettingsPage = () => {
             setIsEditing(false);
         }
     }, [tempName, tempAvatar, updateUserProfile]);
+
+    const handleDynamicPitchToggle = useCallback(() => {
+        setDynamicPitch(!dynamicPitch);
+    }, [dynamicPitch, setDynamicPitch]);
+
+    const handleToggleEditing = useCallback(() => {
+        setIsEditing(prev => !prev);
+    }, []);
+
+    const handleSelectAvatar = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+        const url = e.currentTarget.getAttribute('data-url');
+        if (url) setTempAvatar(url);
+    }, []);
+
+    const handleSegmentChange = useCallback((val: ParticleFrequency) => {
+        setParticleFrequency(val);
+    }, [setParticleFrequency]);
+
+    const handleHudChange = useCallback((val: HUDComplexity) => {
+        setHUDComplexity(val);
+    }, [setHUDComplexity]);
+
+    const handleThemeChange = useCallback((val: ThemeProfile) => {
+        setThemeProfile(val);
+    }, [setThemeProfile]);
+
+    const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setTempName(e.target.value);
+    }, []);
 
     return (
         <div className="w-full max-w-7xl mx-auto py-10 px-6 flex flex-col gap-12 overflow-hidden">
@@ -136,7 +173,7 @@ export const SettingsPage = () => {
                             </SettingRow>
                             <SettingRow title="Neural Pitch" desc="Scale audio frequency with burst velocity">
                                 <button
-                                    onClick={() => setDynamicPitch(!dynamicPitch)}
+                                    onClick={handleDynamicPitchToggle}
                                     className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${dynamicPitch ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30' : 'bg-white/5 text-white/30 hover:bg-white/10'}`}
                                 >
                                     {dynamicPitch ? 'Dynamic' : 'Static'}
@@ -165,7 +202,7 @@ export const SettingsPage = () => {
                                 <SegmentedControl<ParticleFrequency>
                                     options={PARTICLE_OPTIONS}
                                     active={particleFrequency}
-                                    onChange={setParticleFrequency}
+                                    onChange={handleSegmentChange}
                                     colorClass="text-neon-purple"
                                 />
                             </SettingRow>
@@ -173,7 +210,7 @@ export const SettingsPage = () => {
                                 <SegmentedControl<HUDComplexity>
                                     options={HUD_OPTIONS}
                                     active={hudComplexity}
-                                    onChange={setHUDComplexity}
+                                    onChange={handleHudChange}
                                     colorClass="text-neon-cyan"
                                 />
                             </SettingRow>
@@ -200,7 +237,7 @@ export const SettingsPage = () => {
                                 <SegmentedControl<ThemeProfile>
                                     options={THEME_OPTIONS}
                                     active={themeProfile}
-                                    onChange={setThemeProfile}
+                                    onChange={handleThemeChange}
                                     colorClass="text-neon-cyan"
                                 />
                             </SettingRow>
@@ -229,7 +266,7 @@ export const SettingsPage = () => {
                         <div className="glass-card p-10 bg-black/40 border-white/5 rounded-[40px] flex flex-col gap-10 shadow-3xl">
 
                             <div className="flex justify-center relative">
-                                <div className="relative w-32 h-32 group cursor-pointer" onClick={() => setIsEditing(!isEditing)}>
+                                <div className="relative w-32 h-32 group cursor-pointer" onClick={handleToggleEditing}>
                                     <div className="absolute inset-0 bg-neon-cyan/10 rounded-full blur-[40px] opacity-20 group-hover:opacity-60 transition-opacity" />
                                     <div className="w-full h-full rounded-full border-2 border-neon-cyan/20 p-2 group-hover:border-neon-cyan/50 transition-colors">
                                         <div className="w-full h-full rounded-full overflow-hidden shadow-2xl relative">
@@ -259,7 +296,7 @@ export const SettingsPage = () => {
                                             <input
                                                 type="text"
                                                 value={tempName}
-                                                onChange={(e) => setTempName(e.target.value)}
+                                                onChange={handleNameChange}
                                                 className="bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-white font-black italic tracking-tight focus:border-neon-cyan outline-none transition-all placeholder:text-white/10"
                                                 placeholder="ENTER_ID"
                                             />
@@ -273,7 +310,8 @@ export const SettingsPage = () => {
                                                     return (
                                                         <button
                                                             key={i}
-                                                            onClick={() => setTempAvatar(url)}
+                                                            onClick={handleSelectAvatar}
+                                                            data-url={url}
                                                             className={`aspect-square rounded-xl overflow-hidden border-2 transition-all ${tempAvatar === url ? 'border-neon-cyan scale-110 shadow-neon-cyan' : 'border-white/5 opacity-40 hover:opacity-100'}`}
                                                         >
                                                             <img src={url} alt="Avatar Opt" />
@@ -317,7 +355,7 @@ export const SettingsPage = () => {
                                     <div className="w-12 h-12 rounded-2xl bg-red-500/5 flex items-center justify-center group-hover:bg-red-500/10 transition-colors">
                                         <LogOut size={20} className="text-red-500/40 group-hover:text-red-500 transition-colors" />
                                     </div>
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-red-500/40 group-hover:text-red-500 transition-colors">Terminiate Link</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-red-500/40 group-hover:text-red-500 transition-colors">Terminate Link</span>
                                 </button>
                             </div>
 
