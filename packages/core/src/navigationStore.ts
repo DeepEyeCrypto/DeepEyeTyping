@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type ViewMode = 'dashboard' | 'train' | 'stats' | 'settings' | 'achievements' | 'leaderboard';
+type ViewMode = 'dashboard' | 'train' | 'stats' | 'settings' | 'achievements' | 'leaderboard' | 'arena' | 'architect' | 'fleet' | 'deck';
 
 interface NavigationState {
     currentView: ViewMode;

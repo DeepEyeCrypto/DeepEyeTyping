@@ -32,19 +32,33 @@
 @layer components {
     .glass-panel {
         @apply bg-glass-100 backdrop-blur-xl border border-glass-200 shadow-xl;
+        transform: translateZ(0);
+        will-change: backdrop-filter;
     }
 
     .glass-heavy {
         @apply bg-glass-heavy backdrop-blur-3xl border border-white/10 shadow-2xl;
+        transform: translateZ(0);
+        backface-visibility: hidden;
     }
 
     .glass-card {
         @apply bg-glass-100 backdrop-blur-xl border border-glass-200 shadow-xl;
         @apply rounded-2xl p-6 transition-all duration-300;
+        transform: translateZ(0);
+        will-change: transform, opacity;
     }
 
     .glass-card:hover {
         @apply bg-glass-200 border-glass-300 transform scale-[1.01];
+    }
+
+    .glass-card:active {
+        @apply transform scale-[0.98] opacity-80;
+    }
+
+    .glass-card:focus-visible {
+        @apply outline-none ring-2 ring-neon-cyan/50 ring-offset-2 ring-offset-dark-bg;
     }
 
     .glass-dock {

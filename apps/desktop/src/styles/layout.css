@@ -1,0 +1,450 @@
+/*
+ * DeepEyeTyping Responsive Layout
+ * Responsive Glass UI - Stage R1
+ *
+ * App shell layout with responsive breakpoints.
+ * Uses CSS Grid with minmax() and fractional units.
+ */
+
+/* ============================================
+   APP SHELL - ROOT LAYOUT
+   ============================================ */
+
+.app-root {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-root, radial-gradient(circle at top left, #0f172a, #020617));
+    overflow: hidden;
+}
+
+/* ============================================
+   MAIN LAYOUT GRID
+   ============================================ */
+
+.app-layout {
+    flex: 1;
+    display: grid;
+    /*
+     * Desktop (≥1280px): 3-column layout
+     * - SideNav: auto width
+     * - MainContent: flexible (min 0 to prevent overflow)
+     * - RightSidebar: fixed range 260-340px
+     */
+    grid-template-columns: auto minmax(0, 1fr) minmax(260px, 340px);
+    grid-template-rows: auto 1fr;
+    gap: var(--space-md, 1rem);
+    padding: var(--space-md, 1rem) var(--space-lg, 1.5rem);
+    min-width: 0;
+    min-height: 0;
+}
+
+/* Desktop Large - Ultra-wide optimizations */
+@media (min-width: 1440px) {
+    .app-layout {
+        gap: var(--space-lg, 1.5rem);
+        padding: var(--space-lg, 1.5rem) var(--space-xl, 2rem);
+        max-width: 1800px;
+        margin: 0 auto;
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+/* Tablet (768px - 1279px): 2-column, right rail stacks */
+@media (max-width: 1024px) {
+    .app-layout {
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-rows: auto auto auto;
+    }
+
+    .sidenav {
+        grid-row: 1 / -1;
+    }
+
+    .right-rail {
+        grid-column: 2;
+        grid-row: 3;
+    }
+
+    .main-content {
+        grid-column: 2;
+        grid-row: 2;
+    }
+}
+
+/* Mobile (< 768px): Single column, bottom nav */
+@media (max-width: 768px) {
+    .app-layout {
+        display: flex;
+        flex-direction: column;
+        padding: var(--space-sm, 0.75rem);
+        gap: var(--space-sm, 0.75rem);
+    }
+
+    .sidenav {
+        display: none;
+        /* Handled separately as mobile nav */
+    }
+
+    .main-content {
+        min-height: 0;
+        flex: 1;
+    }
+
+    .right-rail {
+        display: none;
+        /* Stack below main content on mobile if needed */
+    }
+}
+
+/* Extra small mobile (< 480px) */
+@media (max-width: 480px) {
+    .app-layout {
+        padding: var(--space-xs, 0.5rem);
+    }
+}
+
+/* ============================================
+   SIDEBAR (SIDENAV)
+   ============================================ */
+
+.sidenav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md, 1rem);
+    padding: var(--space-md, 1rem);
+    background: var(--gradient-dock, linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%));
+    border-radius: var(--radius-xl, 24px);
+    border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.2));
+    backdrop-filter: blur(var(--blur-lg, 18px));
+    -webkit-backdrop-filter: blur(var(--blur-lg, 18px));
+    height: 100%;
+    max-height: calc(100vh - var(--space-xl, 2rem));
+    overflow: hidden;
+}
+
+/* Desktop: Full sidebar */
+@media (min-width: 769px) {
+    .sidenav {
+        width: 80px;
+        min-width: 80px;
+    }
+}
+
+/* Tablet: Collapsed icons only */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .sidenav {
+        width: 64px;
+        min-width: 64px;
+        padding: var(--space-sm, 0.75rem);
+    }
+}
+
+/* ============================================
+   MAIN CONTENT AREA
+   ============================================ */
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    border-radius: var(--radius-xl, 24px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+    border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.2));
+    box-shadow: var(--glass-shadow, 0 18px 45px rgba(15, 23, 42, 0.45));
+}
+
+/* ============================================
+   RIGHT SIDEBAR / RAIL
+   ============================================ */
+
+.right-rail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md, 1rem);
+    min-width: 0;
+}
+
+/* Hide right rail on tablet, show on larger */
+@media (max-width: 1024px) {
+    .right-rail {
+        display: none;
+    }
+}
+
+/* ============================================
+   TOPBAR
+   ============================================ */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md, 1rem);
+    padding: var(--space-sm, 0.75rem) var(--space-lg, 1.5rem);
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(var(--blur-md, 12px));
+    -webkit-backdrop-filter: blur(var(--blur-md, 12px));
+    min-height: 56px;
+}
+
+@media (max-width: 768px) {
+    .topbar {
+        padding: var(--space-sm, 0.75rem);
+    }
+}
+
+/* ============================================
+   CONTENT SCROLL AREA
+   ============================================ */
+
+.content-scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: var(--space-lg, 1.5rem);
+}
+
+@media (max-width: 768px) {
+    .content-scroll {
+        padding: var(--space-md, 1rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .content-scroll {
+        padding: var(--space-sm, 0.75rem);
+    }
+}
+
+/* ============================================
+   FLUID GRID SYSTEMS
+   ============================================ */
+
+/* Auto-fit grid for cards - no media queries needed */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-md, 1rem);
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg, 1.5rem);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-lg, 1.5rem);
+}
+
+/* Tablet: Reduce columns */
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+/* Mobile: Single column */
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
+/* ============================================
+   SPACING UTILITIES
+   ============================================ */
+
+.gap-xs {
+    gap: var(--space-xs);
+}
+
+.gap-sm {
+    gap: var(--space-sm);
+}
+
+.gap-md {
+    gap: var(--space-md);
+}
+
+.gap-lg {
+    gap: var(--space-lg);
+}
+
+.gap-xl {
+    gap: var(--space-xl);
+}
+
+.p-xs {
+    padding: var(--space-xs);
+}
+
+.p-sm {
+    padding: var(--space-sm);
+}
+
+.p-md {
+    padding: var(--space-md);
+}
+
+.p-lg {
+    padding: var(--space-lg);
+}
+
+.p-xl {
+    padding: var(--space-xl);
+}
+
+.m-xs {
+    margin: var(--space-xs);
+}
+
+.m-sm {
+    margin: var(--space-sm);
+}
+
+.m-md {
+    margin: var(--space-md);
+}
+
+.m-lg {
+    margin: var(--space-lg);
+}
+
+.m-xl {
+    margin: var(--space-xl);
+}
+
+.mb-xs {
+    margin-bottom: var(--space-xs);
+}
+
+.mb-sm {
+    margin-bottom: var(--space-sm);
+}
+
+.mb-md {
+    margin-bottom: var(--space-md);
+}
+
+.mb-lg {
+    margin-bottom: var(--space-lg);
+}
+
+.mb-xl {
+    margin-bottom: var(--space-xl);
+}
+
+.mt-xs {
+    margin-top: var(--space-xs);
+}
+
+.mt-sm {
+    margin-top: var(--space-sm);
+}
+
+.mt-md {
+    margin-top: var(--space-md);
+}
+
+.mt-lg {
+    margin-top: var(--space-lg);
+}
+
+.mt-xl {
+    margin-top: var(--space-xl);
+}
+
+/* ============================================
+   VISIBILITY UTILITIES
+   ============================================ */
+
+.hide-mobile {
+    display: block;
+}
+
+.show-mobile-only {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .hide-mobile {
+        display: none !important;
+    }
+
+    .show-mobile-only {
+        display: block !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .hide-small-mobile {
+        display: none !important;
+    }
+}
+
+/* ============================================
+   MOBILE NAVIGATION
+   ============================================ */
+
+.mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-sticky, 200);
+    padding: var(--space-sm, 0.75rem);
+    padding-bottom: calc(var(--space-sm, 0.75rem) + env(safe-area-inset-bottom, 0));
+    background: var(--bg-surface, rgba(15, 23, 42, 0.95));
+    border-top: 1px solid var(--glass-border, rgba(255, 255, 255, 0.2));
+    backdrop-filter: blur(var(--blur-lg, 18px));
+    -webkit-backdrop-filter: blur(var(--blur-lg, 18px));
+}
+
+@media (max-width: 768px) {
+    .mobile-nav {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+}
+
+.mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs, 0.25rem);
+    padding: var(--space-xs, 0.5rem);
+    color: var(--text-secondary, #94a3b8);
+    font-size: var(--font-size-xs, 0.625rem);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: color var(--transition-normal, 160ms ease-out);
+}
+
+.mobile-nav-item.active {
+    color: var(--accent-cyan, #00fff2);
+}
+
+.mobile-nav-item:hover {
+    color: var(--text-primary, #f1f5f9);
+}

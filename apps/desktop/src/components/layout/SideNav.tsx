@@ -1,11 +1,19 @@
-import React, { useEffect, useCallback, memo } from 'react';
-import { Home, Keyboard, BarChart2, Settings, Trophy, Globe } from 'lucide-react';
+import { useEffect, useCallback, memo } from 'react';
+import { Home, Keyboard, BarChart2, Settings, Trophy, Globe, Swords, Code, Users, Brain } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuthStore, useNavigationStore, soundManager } from 'core';
+
+interface SideNavProps {
+    className?: string;
+}
 
 const navItems = [
     { icon: Home, label: 'Dashboard', id: 'dashboard' },
     { icon: Keyboard, label: 'Train', id: 'train' },
+    { icon: Swords, label: 'Arena', id: 'arena' },
+    { icon: Brain, label: 'Neural Deck', id: 'deck' },
+    { icon: Code, label: 'Foundry', id: 'architect' },
+    { icon: Users, label: 'Fleet HQ', id: 'fleet' },
     { icon: BarChart2, label: 'Stats', id: 'stats' },
     { icon: Trophy, label: 'Honors', id: 'achievements' },
     { icon: Globe, label: 'Ranking', id: 'leaderboard' },
@@ -31,8 +39,8 @@ const NavButton = memo(({ item, isActive, onClick }: {
             onClick={handleClick}
             className={`
                 relative w-12 h-12 flex items-center justify-center rounded-xl transition-all duration-200 group
-                hover:bg-glass-200 hover:shadow-lg
-                ${isActive ? 'bg-glass-200 border border-neon-cyan/30' : 'text-white/40'}
+                hover:bg-white/10 hover:shadow-lg
+                ${isActive ? 'bg-white/10 border border-neon-cyan/30' : 'text-white/40'}
             `}
         >
             <item.icon className={`w-6 h-6 transition-colors ${isActive ? 'text-neon-cyan' : 'group-hover:text-white'}`} />
@@ -45,16 +53,21 @@ const NavButton = memo(({ item, isActive, onClick }: {
             {isActive && (
                 <motion.div
                     layoutId="active-nav"
-                    className="absolute -left-1 w-1 h-6 bg-neon-cyan rounded-r-full shadow-neon-cyan"
+                    className="absolute left-[-1px] top-1/2 -translate-y-1/2 w-1 h-6 bg-neon-cyan rounded-r-full shadow-neon-cyan"
                 />
             )}
         </button>
     );
 });
 
-export const SideNav = () => {
-    const { user, initialize, signInWithGoogle, logout, loading } = useAuthStore();
-    const { currentView, setView } = useNavigationStore();
+export const SideNav = ({ className = '' }: SideNavProps) => {
+    const user = useAuthStore((state) => state.user);
+    const initialize = useAuthStore((state) => state.initialize);
+    const signInWithGoogle = useAuthStore((state) => state.signInWithGoogle);
+    const logout = useAuthStore((state) => state.logout);
+    const loading = useAuthStore((state) => state.loading);
+    const currentView = useNavigationStore((state) => state.currentView);
+    const setView = useNavigationStore((state) => state.setView);
 
     // Init Auth Listener
     useEffect(() => {
@@ -74,15 +87,15 @@ export const SideNav = () => {
             initial="hidden"
             animate="visible"
             variants={SIDEBAR_VARIANTS}
-            className="fixed left-6 top-1/2 -translate-y-1/2 w-16 glass-dock flex flex-col items-center gap-8 z-50 py-10 overflow-visible"
+            className={className || "w-16 glass-dock flex flex-col items-center gap-4 z-50 py-6 overflow-visible max-h-[90vh]"}
         >
             {/* Neural Logo */}
-            <div className="w-10 h-10 rounded-full bg-neon-cyan/20 flex items-center justify-center border border-neon-cyan/50 shadow-neon-cyan cursor-pointer hover:scale-110 transition-transform">
+            <div className="w-10 h-10 shrink-0 rounded-full bg-neon-cyan/20 flex items-center justify-center border border-neon-cyan/50 shadow-neon-cyan cursor-pointer hover:scale-110 transition-transform">
                 <span className="text-neon-cyan font-bold text-xl">D</span>
             </div>
 
             {/* Nav Symbols */}
-            <nav className="flex-1 w-full flex flex-col gap-6 items-center">
+            <nav className="flex-1 w-full flex flex-col gap-3 items-center justify-center min-h-0 overflow-y-auto scrollbar-hide py-2">
                 {navItems.map((item) => (
                     <NavButton
                         key={item.id}
@@ -94,7 +107,7 @@ export const SideNav = () => {
             </nav>
 
             {/* User Access Terminal */}
-            <div className="mt-auto flex flex-col items-center gap-4">
+            <div className="mt-auto shrink-0 flex flex-col items-center gap-4">
                 {user && !user.isAnonymous ? (
                     <div className="relative group">
                         <button

@@ -165,7 +165,7 @@ const CommandItem = React.memo(({
     onHover,
     onClose
 }: {
-    command: { label: string, category: string, icon: React.ElementType, action: () => void },
+    command: { label: string, category: string, icon: React.ElementType<{ size?: number; className?: string }>, action: () => void },
     isSelected: boolean,
     index: number,
     onHover: (idx: number) => void,

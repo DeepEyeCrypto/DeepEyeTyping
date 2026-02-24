@@ -1,0 +1,183 @@
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/achievements/AchievementsPage.tsx
+  13:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  92:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/analytics/BiometricCloud.tsx
+  27:18  error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  34:18  error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/analytics/NeuralDeck.tsx
+   12:37  error  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+   12:88  error  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+   13:20  error  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+   13:76  error  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+   34:30  error  JSX attribute values should not contain Arrays created in the same scope   react-perf/jsx-no-new-array-as-prop
+   35:62  error  JSX attribute values should not contain Arrays created in the same scope   react-perf/jsx-no-new-array-as-prop
+   46:43  error  JSX attribute values should not contain Arrays created in the same scope   react-perf/jsx-no-new-array-as-prop
+   47:43  error  JSX attribute values should not contain Arrays created in the same scope   react-perf/jsx-no-new-array-as-prop
+   56:39  error  JSX attribute values should not contain Arrays created in the same scope   react-perf/jsx-no-new-array-as-prop
+   56:79  error  JSX attribute values should not contain Arrays created in the same scope   react-perf/jsx-no-new-array-as-prop
+  127:26  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  128:26  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  129:29  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/architect/ProtocolArchitect.tsx
+   78:34  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+   79:34  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  107:24  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  149:38  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  179:39  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  210:43  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  223:43  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  236:50  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  243:50  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/dashboard/DashboardPage.tsx
+   37:11   error  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+   45:21   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   70:25   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  167:30   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  168:33   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  181:88   error  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+  203:52   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  216:45   error  JSX attribute values should not contain Arrays created in the same scope   react-perf/jsx-no-new-array-as-prop
+  260:30   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  261:30   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  262:33   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  278:122  error  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+  426:42   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  427:42   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  428:45   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  469:77   error  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/dashboard/MissionList.tsx
+   68:22  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   69:22  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  100:38  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  101:38  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  102:41  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/dashboard/StreakWidget.tsx
+  42:30  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  43:30  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  54:30  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  55:30  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/fleet/FleetHQ.tsx
+  44:39  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  62:39  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/layout/AppShell.tsx
+  69:30  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  81:34  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  82:34  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  83:31  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  84:37  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/layout/CommandPalette.tsx
+  168:55  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/layout/SideNav.tsx
+  31:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/layout/ThemeToggle.tsx
+  27:23  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/leaderboard/LeaderboardPage.tsx
+  127:24   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  140:105  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  142:121  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  161:104  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  196:101  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  198:117  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  204:58   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  209:80   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/session/FeedbackAnimations.tsx
+   41:30   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   42:30   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   43:27   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   47:34   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   48:34   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   49:37   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   53:105  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   56:42   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   57:45   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   82:38   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   82:82   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+   82:120  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  126:38   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  126:63   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  126:85   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  127:42   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  127:79   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  127:116  error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  129:78   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  130:74   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  132:87   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  133:58   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+  135:82   error  JSX attribute values should not contain objects created in the same scope  react-perf/jsx-no-new-object-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/session/SessionTemplateSelector.tsx
+   70:39  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  100:27  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  101:27  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  102:38  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  102:56  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  103:36  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  103:54  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  144:30  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  145:30  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/settings/SettingsPage.tsx
+    9:65  error    Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+   42:26  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  131:46  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  158:46  error    JSX attribute values should not contain Arrays created in the same scope     react-perf/jsx-no-new-array-as-prop
+  166:46  error    JSX attribute values should not contain Arrays created in the same scope     react-perf/jsx-no-new-array-as-prop
+  193:46  error    JSX attribute values should not contain Arrays created in the same scope     react-perf/jsx-no-new-array-as-prop
+  224:99  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  244:50  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  245:50  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  246:47  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  254:59  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  268:70  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  287:50  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  288:50  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  289:47  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/typing/TrainingPage.tsx
+  17:24  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  21:34  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  25:35  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  35:34  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  36:34  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  37:31  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  86:34  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  87:34  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+  88:31  error    JSX attribute values should not contain objects created in the same scope    react-perf/jsx-no-new-object-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/typing/TypingArea.tsx
+   60:69  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-explicit-any
+   76:20  error  JSX attribute values should not contain objects created in the same scope                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      react-perf/jsx-no-new-object-as-prop
+  119:17  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/typing/TypingArea.tsx:119:17
+  117 |             // Check for level up
+  118 |             if (currentLevel > prevLevel.current) {
+> 119 |                 setNewLevel(currentLevel);
+      |                 ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  120 |                 setShowLevelUp(true);
+  121 |             }
+  122 |  react-hooks/set-state-in-effect
+
+✖ 129 problems (108 errors, 21 warnings)
+

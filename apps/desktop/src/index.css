@@ -1,21 +1,60 @@
+/* 
+ * DeepEyeTyping - Responsive Glass UI
+ * 
+ * Import order matters! Design tokens must come first.
+ */
+
+/* Custom Styles */
+@import "./styles/tokens.css";
+@import "./styles/layout.css";
+@import "./styles/motion.css";
+@import "./styles/components.css";
+
+/* Tailwind (keep at end for overrides) */
 @import "tailwindcss";
 
 :root {
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --bg-deep: #05050a;
+  --bg-deep: #0a0a0f;
+
+  /* Neon Colors */
+  --color-neon-cyan: #00fff2;
+  --color-neon-purple: #bc13fe;
+  --color-neon-blue: #131afe;
 }
 
 @theme {
-  --color-glass-100: rgba(255, 255, 255, 0.05);
-  --color-glass-200: rgba(255, 255, 255, 0.1);
-  --color-glass-300: rgba(255, 255, 255, 0.2);
+  /* Colors */
+  --color-glass-white: rgba(255, 255, 255, 0.4);
+  --color-glass-border: rgba(255, 255, 255, 0.6);
+  --color-glass-shine: rgba(255, 255, 255, 0.8);
 
+  --color-pastel-pink: #ffcce6;
+  --color-pastel-blue: #cce0ff;
+  --color-pastel-mint: #ccffe0;
+  --color-pastel-lavender: #e6ccff;
+
+  --color-text-main: #f0f0f5;
+  --color-text-sub: #888899;
+
+  /* Neon Colors */
   --color-neon-cyan: #00fff2;
   --color-neon-purple: #bc13fe;
   --color-neon-blue: #131afe;
 
-  --color-dark-bg: #05050a;
-  --color-dark-surface: #0a0a12;
+  /* Glass Colors */
+  --color-glass-100: rgba(255, 255, 255, 0.05);
+  --color-glass-200: rgba(255, 255, 255, 0.1);
+  --color-glass-300: rgba(255, 255, 255, 0.2);
+
+  /* Shadows */
+  --shadow-glass:
+    8px 8px 16px rgba(166, 171, 189, 0.5),
+    -8px -8px 16px rgba(255, 255, 255, 0.8);
+
+  --shadow-glass-inset:
+    inset 4px 4px 8px rgba(166, 171, 189, 0.2),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.8);
 
   --shadow-neon-cyan: 0 0 10px rgba(0, 255, 242, 0.5), 0 0 20px rgba(0, 255, 242, 0.3);
   --shadow-neon-purple: 0 0 10px rgba(188, 19, 254, 0.5), 0 0 20px rgba(188, 19, 254, 0.3);
@@ -24,59 +63,153 @@
 body {
   margin: 0;
   background-color: var(--bg-deep);
-  color: #ffffff;
+  color: var(--color-text-main);
   font-family: var(--font-sans);
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-/* --- LIQUID GLASS UTILITIES --- */
+/* --- CYBERPUNK GLASS UTILITIES --- */
 
 @layer components {
 
-  /* Defined explicitly to avoid @apply lookup issues in v4 */
-  .glass-panel {
-    @apply bg-glass-100 backdrop-blur-xl border border-glass-200 shadow-xl;
+  /* Main Glass Panel */
+  .glass-modern {
+    @apply backdrop-blur-2xl border border-white/5 rounded-3xl;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
 
+  /* Glass Dock (for sidebar) */
+  .glass-dock {
+    @apply backdrop-blur-xl border border-white/10 rounded-2xl;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Glass Button */
+  .glass-button {
+    @apply px-6 py-3 rounded-2xl font-bold transition-all duration-300 cursor-pointer;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-button:hover {
+    @apply bg-white/10;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 255, 242, 0.2);
+    border-color: rgba(0, 255, 242, 0.3);
+  }
+
+  .glass-button:active {
+    transform: translateY(1px);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Glass Input */
+  .glass-input {
+    @apply px-4 py-3 rounded-xl outline-none transition-all;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-input:focus {
+    @apply bg-white/10;
+    border-color: rgba(0, 255, 242, 0.5);
+    box-shadow: 0 0 20px rgba(0, 255, 242, 0.1);
+  }
+
+  /* Glass Card */
   .glass-card {
-    /* Repeating the glass-panel styles locally instead of @apply glass-panel */
-    @apply bg-glass-100 backdrop-blur-xl border border-glass-200 shadow-xl;
-    @apply rounded-2xl p-6 transition-all duration-300;
-  }
-
-  .glass-card:hover {
-    @apply bg-glass-200 border-glass-300 transform scale-[1.01];
-  }
-
-  .neon-text {
-    @apply text-neon-cyan;
-    filter: drop-shadow(0 0 5px rgba(0, 255, 242, 0.6));
-  }
-
-  .btn-primary {
-    @apply px-6 py-2 rounded-lg font-bold text-black bg-neon-cyan shadow-neon-cyan transition-all duration-300 hover:bg-white hover:scale-105 active:scale-95;
-  }
-
-  .btn-ghost {
-    @apply px-6 py-2 rounded-lg font-medium text-white/70 hover:text-white hover:bg-glass-100 transition-all;
+    @apply backdrop-blur-lg border border-white/5 rounded-2xl p-4;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
   }
 }
 
-/* Scrollbar Styling */
+/* --- NEON UTILITIES --- */
+@layer utilities {
+  .text-neon-cyan {
+    color: var(--color-neon-cyan);
+    text-shadow: 0 0 10px rgba(0, 255, 242, 0.5);
+  }
+
+  .text-neon-purple {
+    color: var(--color-neon-purple);
+    text-shadow: 0 0 10px rgba(188, 19, 254, 0.5);
+  }
+
+  .bg-neon-cyan {
+    background-color: var(--color-neon-cyan);
+  }
+
+  .bg-neon-purple {
+    background-color: var(--color-neon-purple);
+  }
+
+  .border-neon-cyan {
+    border-color: var(--color-neon-cyan);
+  }
+
+  .border-neon-purple {
+    border-color: var(--color-neon-purple);
+  }
+
+  .shadow-neon-cyan {
+    box-shadow: var(--shadow-neon-cyan);
+  }
+
+  .shadow-neon-purple {
+    box-shadow: var(--shadow-neon-purple);
+  }
+
+  .shadow-neon-cyan\/50 {
+    box-shadow: 0 0 10px rgba(0, 255, 242, 0.5);
+  }
+
+  /* Glass color variants */
+  .bg-glass-100 {
+    background-color: var(--color-glass-100);
+  }
+
+  .bg-glass-200 {
+    background-color: var(--color-glass-200);
+  }
+
+  .bg-glass-300 {
+    background-color: var(--color-glass-300);
+  }
+
+  /* Selection */
+  .selection-neon-cyan\/50::selection {
+    background-color: rgba(0, 255, 242, 0.5);
+    color: white;
+  }
+}
+
+/* Scrollbar Styling - Dark/Cyberpunk */
 ::-webkit-scrollbar {
   width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(0, 0, 0, 0.2);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 255, 242, 0.2);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 255, 242, 0.4);
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

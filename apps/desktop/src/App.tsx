@@ -9,6 +9,10 @@ const SettingsPage = lazy(() => import('./components/settings/SettingsPage').the
 const StatsPage = lazy(() => import('./components/stats/StatsPage').then(module => ({ default: module.StatsPage })));
 const AchievementsPage = lazy(() => import('./components/achievements/AchievementsPage').then(m => ({ default: m.AchievementsPage })));
 const LeaderboardPage = lazy(() => import('./components/leaderboard/LeaderboardPage').then(m => ({ default: m.LeaderboardPage })));
+const ArenaPage = lazy(() => import('./components/arena/ArenaPage').then(m => ({ default: m.ArenaPage })));
+const ProtocolArchitect = lazy(() => import('./components/architect/ProtocolArchitect').then(m => ({ default: m.ProtocolArchitect })));
+const FleetHQ = lazy(() => import('./components/fleet/FleetHQ').then(m => ({ default: m.FleetHQ })));
+const NeuralDeck = lazy(() => import('./components/analytics/NeuralDeck').then(m => ({ default: m.NeuralDeck })));
 
 function App() {
   const { currentView } = useNavigationStore();
@@ -29,7 +33,7 @@ function App() {
 
   return (
     <AppShell>
-      <div className="flex flex-col h-full items-center gap-8 w-full">
+      <div className="flex flex-col min-h-full items-center gap-8 w-full">
         <Suspense fallback={
           <div className="flex items-center justify-center h-full w-full">
             <div className="w-8 h-8 rounded-full border-2 border-neon-cyan border-t-transparent animate-spin" />
@@ -45,6 +49,10 @@ function App() {
 
           {currentView === 'achievements' && <AchievementsPage />}
           {currentView === 'leaderboard' && <LeaderboardPage />}
+          {currentView === 'arena' && <ArenaPage />}
+          {currentView === 'architect' && <ProtocolArchitect />}
+          {currentView === 'fleet' && <FleetHQ />}
+          {currentView === 'deck' && <NeuralDeck />}
         </Suspense>
       </div>
     </AppShell>

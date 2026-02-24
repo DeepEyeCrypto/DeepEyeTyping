@@ -35,8 +35,18 @@ export default defineConfig({
     target: 'esnext',
     minify: 'esbuild',
     reportCompressedSize: false, // Speed up build
+    // PERFORMANCE: CSS optimization
+    cssCodeSplit: true,
+    // PERFORMANCE: Sourcemap only for development
+    sourcemap: process.env.NODE_ENV === 'development',
+    // PERFORMANCE: Chunk size limits
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
+        // PERFORMANCE: Optimize chunk naming for caching
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
         manualChunks: (id) => {
           // Vendor Chunking Strategy
           if (id.includes('node_modules')) {
@@ -60,9 +70,22 @@ export default defineConfig({
             if (id.includes('lucide-react')) {
               return 'vendor-icons';
             }
+            // Charts Library
+            if (id.includes('recharts') || id.includes('d3')) {
+              return 'vendor-charts';
+            }
+          }
+          // PERFORMANCE: Separate core package into its own chunk
+          if (id.includes('packages/core/src')) {
+            return 'core';
           }
         }
       }
     }
-  }
+  },
+  // PERFORMANCE: Optimize dependencies
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'framer-motion', 'zustand'],
+    exclude: [],
+  },
 })

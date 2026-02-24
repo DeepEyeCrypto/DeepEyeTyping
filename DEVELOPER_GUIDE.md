@@ -1,109 +1,96 @@
-# DeepEye Developer Guide
+# DeepEyeTyping: Developer Protocol Guide
 
-## System Architecture
+> **Authorized Clearance Level Required.**
+> This document details the internal architecture, state management patterns, and build systems for the DeepEye Neural Interface.
 
-### 1. The "Hex-Core" Logic Pattern
+---
 
-This is a monorepo managed with npm workspaces:
+## 🏗 System Topography (Monorepo)
 
-- `apps/desktop`: The main Tauri + Vite React Application.
-- `apps/web`: Next.js marketing site with Liquid Glass UI.
-- `packages/core`: Pure TypeScript logic (Zustand stores, Firebase sync, Sound engine).
-- `packages/ui`: Shared design tokens and CSS utilities.
+The project utilizes a strict NPM Workspaces implementation to share business logic and design systems between the Native Client and Web Platform.
 
-All core logic resides in `packages/core`. The UI layers are purely visual renderers.
+### 🌐 `packages/`
 
-- **Store:** `zustand` manages the `TypingState`.
-- **Inputs:** `TypingArea.tsx` captures keydowns -> calls `store.inputChar()`.
-- **Outputs:** Store updates `userInput`, `stats`, `isFinished`.
-- **Side Effects:** Store triggers `soundManager.play()` and `firebase.saveSession()`.
+These are the building blocks of the ecosystem.
 
-### 2. Tailwind v4 & Liquid Glass
+* **`packages/core`**: The **Brain**.
+  * **Zustand Stores**: `typingStore` (Engine), `progressStore` (Gamification), `authStore` (Identity), `settingsStore`.
+  * **Firebase Hooks**: Custom hooks (`useStats`, `useLeaderboard`) wrapping Firestore snapshots.
+  * **Analytics Engine**: `TypingAnalytics` class for calculating WPM, Consistency (Standard Deviation of keystrokes), and Weakest Keys.
+  * **Sound Manager**: Procedural audio engine using `Howler` and WebAudio API.
+* **`packages/ui`**: The **Skin**.
+  * Contains the `theme.css` file with all CSS Variables for the "Liquid Glass" aesthetic.
+  * Defines shared Tailwind config presets.
 
-We use the new Tailwind v4 engine across all projects.
+### 🖥 `apps/`
 
-- **Shared Tokens:** Defined in `packages/ui/src/theme.css`.
-- **Glass Panel:** A custom utility class combining `backdrop-blur-xl`, `bg-white/5`, and `border-white/10`.
-- **Neon Glows:** Uses `drop-shadow` and `box-shadow` with CSS variables like `--color-neon-cyan`.
+The consumer applications.
 
-### 3. Firebase & Security
+* **`apps/desktop`**: (Tauri + Vite + React)
+  * The core product. Native desktop app with full system access.
+  * Uses `react-router` (or custom view state) for navigation.
+  * Implements the "Arena" (Multiplayer) components.
+* **`apps/web`**: (Next.js 15)
+  * Server-side rendered (SSR) landing page.
+  * Marketing funnel and public-facing leaderboards.
 
-- **Auth:** Uses `onAuthStateChanged` in a `useEffect` inside `SideNav`.
-- **Data:**
-  - Sessions: `/users/{uid}/sessions/{sessionId}`
-  - Progress: `/users/{uid}/progress/main` (Single document for XP/Badges)
-- **Security:** Firestore Rules configured in `firestore.rules` to strictly enforce `request.auth.uid == userId`.
+---
 
-### 4. Sound Engine v2
+## 🧠 Core Systems
 
-We use `window.AudioContext` for real-time synthesis:
+### 1. The Typing Engine (`useTypingStore`)
 
-- **Layered Oscillators:** Keypresses combine high-freq sine transients with low-freq triangle thuds for mechanical depth.
-- **Noise Synthesis:** Errors use sawtooth sweeps mixed with white noise bursts.
-- **Navigation Hooks:** A custom `playNavigation` sweep provides audible feedback for UI transitions.
-- *Why?* Instant response, zero asset load, and a cohesive "Cyber-Acoustic" brand identity.
+The engine is event-driven. It does not use `input` elements but captures global `keydown` events to support custom "Virtual Buffers".
 
-### 5. Command Palette (The Shell)
+* **Keystroke Logging**: Every keypress is timestamped.
+* **Analytics**: WPM and Accuracy are recalculated in real-time on every input.
+* **God Mode**: A special state that triggers screen shake effects on errors.
 
-The system features a global command palette triggered by `⌘K` or the Search Bar:
+### 2. Cloud Synchronization (Firebase)
 
-- **Registry:** Managed in `CommandPalette.tsx`.
-- **Search:** Fuzzy matching across `LESSONS` and `NavigationStore` views.
-- **UX:** Full keyboard accessibility (↑/↓/Enter/Esc).
+* **Auth**: Supports Google & GitHub Providers. Guests are supported with `localStorage` fallback.
+* **Firestore Data Model**:
+  * `users/{uid}`: Private profile data.
+  * `users/{uid}/sessions`: Sub-collection of past typing history.
+  * `leaderboard/{uid}`: Public summary document.
+* **Realtime Database (Arena & Fleets)**:
+  * Used for low-latency multiplayer state and real-time fleet presence.
 
-### 6. Environmental Visuals (FX)
+### 3. The "Liquid Glass" Design System
 
-To enhance the immersion "Vision Pro" feeling:
+We avoid standard UI libraries in favor of a custom CSS-first approach for maximum performance and unique aesthetics.
 
-- **God Mode Aura:** When `godMode` is active in `SettingsStore`, `AppShell` renders a subtle, pulsating red border glow.
-- **System Stream:** The Dashboard includes a `SystemStream` component that simulates neural link logs during initialization.
-- **Grainy Textures:** A global SVG noise overlay (`packages/ui/src/theme.css`) is filtered across glass surfaces to prevent clinical gradients.
+* **Classes**: `.glass-panel`, `.glass-card`, `.neon-text`.
+* **Colors**: Semantically mapped to `neon-cyan` (Primary), `neon-purple` (Secondary/Exam), and `dark-bg`.
 
-### 6. Progression Engine
+---
 
-- **Store:** `progressStore.ts` manages XP, Level, and Badges separately from session state.
-- **Sync:** `useProgressSync.ts` hook handles bi-directional syncing (Local <-> Cloud).
-- **Gamification:** `gamification.ts` defines Badge logic and Level Curves.
-- **Exams:** `lessons.ts` includes `strictMode` flag which triggers immediate failure in `store.ts` if accuracy drops below threshold.
+## 🛠 Deployment Protocols
 
-### 7. Performance & Quality Control
+### Desktop (MacOS/Windows/Linux)
 
-To maintain a "0ms perceived lag" environment, we enforce strict performance rules:
+Builds a native binary using Tauri.
 
-- **Linting:** We use `eslint-plugin-react-perf` to prevent inline object/function creation in JSX props which kills memoization.
-  - Run `npm run lint` to check for regressions.
-- **Bundle Analysis:** `rollup-plugin-visualizer` generates `stats.html` on every build.
-  - We target a **< 500kB** initial load.
-  - Dependencies are split: React, Motion, and Firebase live in separate vendor chunks.
-- **CI/CD:** GitHub Actions run a "Quality Gate" that fails if:
-  - Linting fails.
-  - The main application logic chunk exceeds **50kB**.
-- **Pre-commit:** Husky runs `npm run lint` locally before every commit.
-
-## Common Tasks
-
-### Adding a New Lesson
-
-Edit `packages/core/src/lessons.ts`.
-
-```typescript
-{
-  id: 'l6',
-  title: 'New Drill',
-  category: 'Code',
-  difficulty: 2,
-  text: 'Your text here...'
-}
+```bash
+npm run tauri build
 ```
 
-### Build & Audit
+* Artifacts are output to `apps/desktop/src-tauri/target/release`.
+* Ensure unique Bundle ID in `tauri.conf.json` before release.
 
-1. **Lint:** `npm run lint` (All workspaces).
-2. **Build Desktop:** `npm run build --workspace=desktop`.
-3. **Audit Size:** Open `apps/desktop/stats.html` after build.
-4. **Desktop App:** Run `npm run tauri build` to generate binaries.
+### Web (Vercel/Netlify)
 
-## Troubleshooting
+Standard Next.js deployment.
 
-- **Tailwind Error:** Ensure `@tailwindcss/postcss` is installed in `apps/desktop`.
-- **Sound Not Playing:** User must interact with DOM first (Browser Autoplay Policy).
+```bash
+npm run build -w web
+```
+
+---
+
+## 🧪 Testing Protocols
+
+* **Linting**: `npm run lint` (ESLint with React Perf plugins).
+* **Type Check**: `npm run typecheck`.
+
+> *End of Briefing. Initialize Code Stream.*

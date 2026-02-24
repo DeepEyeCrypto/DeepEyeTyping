@@ -12,11 +12,12 @@ const GRID_VARIANTS = {
 };
 
 export const LessonSelector = () => {
-    const { setText } = useTypingStore();
+    const { setText, activeLessonId } = useTypingStore();
     const [activeTab, setActiveTab] = useState<'practice' | 'exam'>('practice');
 
     const handleSelect = useCallback((lesson: LessonConfig) => {
         setText(lesson.text, lesson.type, lesson.id);
+        // View swap handled by parent component now
     }, [setText]);
 
     const handleTabPractice = useCallback(() => setActiveTab('practice'), []);
@@ -51,8 +52,8 @@ export const LessonSelector = () => {
             </div>
 
             {/* Scrollable Protocol Grid */}
-            <div className="w-full relative">
-                <div className="flex gap-5 overflow-x-auto pb-8 pt-2 scrollbar-hide snap-x px-1 [mask-image:linear-gradient(to_right,rgba(0,0,0,0),rgba(0,0,0,1)_20px,rgba(0,0,0,1)_calc(100%-20px),rgba(0,0,0,0))]">
+            <div className="w-full relative min-h-[50vh]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 pb-8">
                     <AnimatePresence mode="popLayout">
                         {filteredLessons.map((lesson) => (
                             <motion.div
@@ -62,25 +63,29 @@ export const LessonSelector = () => {
                                 initial="initial"
                                 animate="animate"
                                 exit="exit"
-                                className="snap-start"
+                                className="h-full"
                             >
-                                <LessonCard lesson={lesson} onSelect={handleSelect} />
+                                <LessonCard
+                                    lesson={lesson}
+                                    onSelect={handleSelect}
+                                    isActive={lesson.id === activeLessonId}
+                                />
                             </motion.div>
                         ))}
                     </AnimatePresence>
-
-                    {filteredLessons.length === 0 && (
-                        <div className="min-h-[180px] flex items-center justify-center w-full text-white/20 text-xs italic border border-dashed border-white/5 rounded-2xl">
-                            Awaiting clearance level synchronization...
-                        </div>
-                    )}
                 </div>
+
+                {filteredLessons.length === 0 && (
+                    <div className="absolute inset-0 flex items-center justify-center w-full text-white/20 text-xs italic border border-dashed border-white/5 rounded-2xl h-48">
+                        Awaiting clearance level synchronization...
+                    </div>
+                )}
             </div>
         </div>
     );
 };
 
-const LessonCard = ({ lesson, onSelect }: { lesson: LessonConfig, onSelect: (l: LessonConfig) => void }) => {
+const LessonCard = ({ lesson, onSelect, isActive }: { lesson: LessonConfig, onSelect: (l: LessonConfig) => void, isActive?: boolean }) => {
     const handleClick = useCallback(() => onSelect(lesson), [lesson, onSelect]);
 
     const isExam = lesson.type === 'exam';
@@ -89,7 +94,8 @@ const LessonCard = ({ lesson, onSelect }: { lesson: LessonConfig, onSelect: (l: 
         <button
             onClick={handleClick}
             className={`
-                relative glass-card min-w-[260px] max-w-[260px] p-0 rounded-[28px] flex flex-col transition-all text-left group overflow-hidden border-white/5 hover:border-white/20
+                relative glass-card w-full h-full p-0 rounded-[28px] flex flex-col transition-all text-left group overflow-hidden border-white/5 hover:border-white/20 cursor-pointer
+                ${isActive ? (isExam ? 'border-neon-purple shadow-[0_0_20px_rgba(188,19,254,0.3)]' : 'border-neon-cyan shadow-[0_0_20px_rgba(0,255,242,0.3)]') : ''}
                 ${isExam ? 'hover:shadow-[0_0_40px_rgba(188,19,254,0.1)]' : 'hover:shadow-[0_0_40px_rgba(0,255,242,0.1)]'}
             `}
         >

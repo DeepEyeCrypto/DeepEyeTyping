@@ -1,0 +1,45 @@
+name: "Release Architecture"
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish-tauri:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest]
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Rust Stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Global Dependencies
+        run: npm install
+
+      - name: Build Core
+        run: cd packages/core && npm install && npm run build
+
+      - name: Build Desktop (Tauri)
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__
+          releaseName: "DeepEye Typing v__VERSION__"
+          releaseBody: "Automated Phase 4 Production Build."
+          releaseDraft: true
+          prerelease: false
+          args: "--target universal-apple-darwin"

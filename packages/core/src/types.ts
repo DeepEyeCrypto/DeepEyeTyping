@@ -4,7 +4,9 @@ export type Finger = 'thumb' | 'index' | 'middle' | 'ring' | 'pinky';
 
 export interface KeyStroke {
     key: string;
-    timestamp: number;
+    timestamp: number; // For compatibility
+    pressTime: number; // Sub-ms start
+    releaseTime?: number; // End for Dwell calculation
     isCorrect: boolean;
     expected: string;
 }
@@ -41,4 +43,42 @@ export interface TypingSession {
     timestamp: any; // Firestore timestamp or numeric
     weakestKeys?: string[];
     neuralMap?: Record<string, { heat: number }>;
+}
+
+export interface TemporalMetric {
+    avgDwellTime: number; // How long key was held
+    avgFlightTime: number; // Gap between keys
+    errorRate: number;
+}
+
+export interface Fleet {
+    id: string;
+    name: string;
+    ownerId: string;
+    description?: string;
+    members: string[]; // Array of UIDs
+    createdAt: any;
+    avgWpm?: number;
+    avgAccuracy?: number;
+}
+
+export interface FleetMember {
+    uid: string;
+    displayName: string;
+    photoURL?: string;
+    role: 'commander' | 'operative';
+    joinedAt: any;
+    currentSession?: {
+        lessonId: string;
+        progress: number;
+        wpm: number;
+    };
+}
+
+export interface CustomProtocol extends LessonConfig {
+    creatorId: string;
+    isPublic: boolean;
+    tags: string[];
+    createdAt: any;
+    version: number;
 }

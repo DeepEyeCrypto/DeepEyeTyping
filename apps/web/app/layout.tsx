@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DeepEye Protocol - Training",
+  title: "DeepEyeTyping - Training",
   description: "Advanced Neural Interface Training Protocol. Master your typing interface.",
 };
 

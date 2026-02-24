@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { getDatabase } from 'firebase/database';
 import { getAnalytics } from 'firebase/analytics';
 
 // TODO: Replace these with your actual Firebase Console keys
@@ -18,12 +19,14 @@ const firebaseConfig = {
 let app;
 let auth: any;
 let db: any;
+let rtdb: any;
 let analytics: any;
 
 try {
     app = initializeApp(firebaseConfig);
     auth = getAuth(app);
     db = getFirestore(app);
+    rtdb = getDatabase(app);
     // Only initialize analytics in browser environment
     if (typeof window !== 'undefined') {
         analytics = getAnalytics(app);
@@ -33,6 +36,7 @@ try {
     // Dummy objects to prevent null errors elsewhere
     auth = { onAuthStateChanged: () => () => { } } as any;
     db = {} as any;
+    rtdb = {} as any;
 }
 
-export { app, auth, db, analytics };
+export { app, auth, db, rtdb, analytics };

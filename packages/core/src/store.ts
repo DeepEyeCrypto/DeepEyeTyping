@@ -4,7 +4,7 @@ import { collection, addDoc, serverTimestamp, doc, setDoc, getDoc } from 'fireba
 import { soundManager } from './soundManager';
 import type { KeyStroke } from './types';
 import { TypingAnalytics } from './analytics';
-import { useProgressStore } from './progressStore';
+import { useProgressStore } from './progressStore'; // Gamification
 
 interface TypingState {
     // Input State
@@ -13,6 +13,7 @@ interface TypingState {
     userInput: string;
     currentIndex: number;
     sessionType: 'practice' | 'exam';
+    isRace: boolean;
 
     // Advanced Stats Telemetry
     keystrokes: KeyStroke[];
@@ -22,16 +23,20 @@ interface TypingState {
     wpm: number;
     accuracy: number;
     errorCount: number;
-    consistency: number; // New: Rhythm metric
+    consistency: number;
+    status: 'idle' | 'running' | 'finished' | 'failed';
     isFinished: boolean;
 
     // Actions
-    setText: (text: string, type?: 'practice' | 'exam', lessonId?: string) => void;
-    inputChar: (char: string) => void;
+    setText: (text: string, type?: 'practice' | 'exam', lessonId?: string, isRace?: boolean) => void;
+    inputChar: (char: string, pressTime?: number) => void;
+    releaseChar: (char: string, releaseTime?: number) => void;
     backspace: () => void;
     reset: () => void;
-    saveSession: () => Promise<void>;
+    saveSession: (metadata?: { isRace?: boolean; isWinner?: boolean }) => Promise<void>;
 }
+
+let lastStatsUpdate = 0;
 
 export const useTypingStore = create<TypingState>((set, get) => ({
     targetText: "The quick brown fox jumps over the lazy dog.",
@@ -39,6 +44,7 @@ export const useTypingStore = create<TypingState>((set, get) => ({
     userInput: "",
     currentIndex: 0,
     sessionType: 'practice',
+    isRace: false,
     startTime: null,
     keystrokes: [],
 
@@ -46,14 +52,21 @@ export const useTypingStore = create<TypingState>((set, get) => ({
     accuracy: 100,
     errorCount: 0,
     consistency: 0,
+    status: 'idle',
     isFinished: false,
 
-    setText: (text, type = 'practice', lessonId) => {
+    setText: (text: string, type: 'practice' | 'exam' = 'practice', lessonId?: string, isRace: boolean = false) => {
         get().reset();
-        set({ targetText: text, sessionType: type, activeLessonId: lessonId || null });
+
+        // Reset Rust Engine if available (Tauri)
+        if (typeof window !== 'undefined' && (window as any).__TAURI__) {
+            (window as any).__TAURI__.core.invoke('reset_session', { text }).catch(console.error);
+        }
+
+        set({ targetText: text, sessionType: type, activeLessonId: lessonId || null, isRace });
     },
 
-    inputChar: (char) => {
+    inputChar: (char: string, pressTime?: number) => {
         const {
             targetText,
             userInput,
@@ -61,70 +74,89 @@ export const useTypingStore = create<TypingState>((set, get) => ({
             startTime,
             keystrokes,
             errorCount,
-            isFinished
+            isFinished,
+            isRace
         } = get();
 
         if (isFinished) return;
 
+        // --- RUST ENGINE OFFLOAD (Desktop) ---
+        if (typeof window !== 'undefined' && (window as any).__TAURI__) {
+            (window as any).__TAURI__.core.invoke('handle_input', { charCode: char })
+                .then((stats: any) => {
+                    const newUserInput = userInput + char;
+                    const finished = newUserInput.length === targetText.length;
+
+                    set({
+                        userInput: newUserInput,
+                        currentIndex: currentIndex + 1,
+                        wpm: Math.round(stats.wpm),
+                        accuracy: Math.round(stats.accuracy),
+                        errorCount: userInput.length - Math.floor(stats.accuracy * userInput.length / 100), // Approximate
+                        status: finished ? 'finished' : 'running',
+                        isFinished: finished
+                    });
+
+                    if (finished) {
+                        soundManager.playSuccess();
+                        if (!isRace) get().saveSession();
+                    }
+                })
+                .catch((err: any) => console.error("Rust Engine Error:", err));
+
+            // Return early to let Rust handle stats. 
+            // React just updates the input visual via state.
+            return;
+        }
+        // ---------------------------
+
         const now = Date.now();
-        // Start timer on first input
         const newStartTime = startTime || now;
 
         const newUserInput = userInput + char;
         const expectedChar = targetText[currentIndex];
         const isCorrect = char === expectedChar;
 
-        // Sound FX
+        const currentWpm = get().wpm;
         if (isCorrect) {
-            soundManager.playKeypress();
+            soundManager.playKeypress(currentWpm / 60);
         } else {
             soundManager.playError();
         }
 
-        // Log Keystroke
+        const pressTimestamp = pressTime || now;
         const newKeystroke: KeyStroke = {
             key: char,
-            timestamp: now,
+            timestamp: pressTimestamp,
+            pressTime: pressTimestamp,
             isCorrect,
             expected: expectedChar
         };
         const newKeystrokes = [...keystrokes, newKeystroke];
 
-        // Calculate Stats using Analytics Engine
         const totalTimeMs = now - newStartTime;
-        const newWpm = TypingAnalytics.calculateWPM(newKeystrokes, totalTimeMs);
-        const consistency = TypingAnalytics.calculateConsistency(newKeystrokes);
-
         const newErrors = isCorrect ? errorCount : errorCount + 1;
         const newAccuracy = Math.max(0, 100 - ((newErrors / newUserInput.length) * 100));
-
-        // --- STRICT MODE CHECK ---
-        // For now, we hardcode the threshold or get it from active lesson state if available.
-        // Since store doesn't explicitly track "Active Lesson Config" (only targetText), 
-        // we might need to rely on a passed prop or context? 
-        // Actually, let's assume strict logic based on a flag in store or derived.
-        // But for this MVC step, let's just use strict logic if the text is long and accuracy < 90?
-        // No, better: Let's assume the component handles the "Stop" if validation fails?
-        // Ideally the store should handle it.
-        // Let's defer "Strict Mode Failure" to the UI side or handle it in specific Exam store later?
-        // Actually, let's just add a simple check: if errorCount > 10, fail?
-        // The requirement was "Exam Mode".
-        // Let's Update the store to accept `mode` in `setText` or `startSession`.
-
-        // REVISION: We need to know if we are in exam mode.
-        // I will add `sessionType` to the store state.
-
-
-        // Check Completion
         const finished = newUserInput.length === targetText.length;
 
-        // EXAM MODE: Fail if accuracy check fails (with buffer)
+        // PERFORMANCE FIX: Throttle heavy stats calculations to every 500ms or on finish
+        // This prevents expensive array operations on every keystroke
+        const shouldUpdateHeavyStats = now - lastStatsUpdate > 500 || finished;
+
+        let newWpm = currentWpm;
+        let newConsistency = get().consistency;
+
+        if (shouldUpdateHeavyStats) {
+            // Only calculate WPM and consistency when needed (throttled)
+            newWpm = TypingAnalytics.calculateWPM(newKeystrokes, totalTimeMs);
+            newConsistency = TypingAnalytics.calculateConsistency(newKeystrokes);
+            lastStatsUpdate = now;
+        }
+
         const { sessionType } = get();
         let failed = false;
         if (sessionType === 'exam' && newUserInput.length > 20 && newAccuracy < 95) {
             failed = true;
-            // Early termination logic
-            console.log("EXAM FAILED: Accuracy dropped below 95%");
         }
 
         set({
@@ -135,17 +167,37 @@ export const useTypingStore = create<TypingState>((set, get) => ({
             wpm: newWpm,
             accuracy: Math.round(newAccuracy),
             errorCount: newErrors,
-            consistency: parseFloat(consistency.toFixed(2)),
+            consistency: parseFloat(newConsistency.toFixed(2)),
+            status: failed ? 'failed' : (finished ? 'finished' : 'running'),
             isFinished: finished || failed
         });
 
         if (failed) {
             soundManager.playError();
-            // Maybe set a 'status' field to 'failed'? 
-            // For now, isFinished=true with incomplete text acts as 'gave up/failed'.
         } else if (finished) {
             soundManager.playSuccess();
-            get().saveSession();
+            if (!isRace) {
+                get().saveSession();
+            }
+        }
+    },
+
+    releaseChar: (char: string, releaseTime?: number) => {
+        const { keystrokes, isFinished } = get();
+        if (isFinished) return;
+
+        const now = releaseTime || Date.now();
+        const reversedKeystrokes = [...keystrokes].reverse();
+        const lastIndex = reversedKeystrokes.findIndex(k => k.key === char && !k.releaseTime);
+
+        if (lastIndex !== -1) {
+            const actualIndex = keystrokes.length - 1 - lastIndex;
+            const newKeystrokes = [...keystrokes];
+            newKeystrokes[actualIndex] = {
+                ...newKeystrokes[actualIndex],
+                releaseTime: now
+            };
+            set({ keystrokes: newKeystrokes });
         }
     },
 
@@ -169,34 +221,28 @@ export const useTypingStore = create<TypingState>((set, get) => ({
             accuracy: 100,
             errorCount: 0,
             consistency: 0,
+            status: 'idle',
             isFinished: false
         });
-        return undefined;
     },
 
-    saveSession: async () => {
-        const { wpm, accuracy, errorCount, consistency, keystrokes } = get();
+    saveSession: async (metadata?: { isRace?: boolean; isWinner?: boolean }) => {
+        const { wpm, accuracy, errorCount, consistency, keystrokes, startTime } = get();
         const user = auth.currentUser;
 
         // --- GAMIFICATION TRIGGER ---
-        const { addXp, checkBadges } = useProgressStore.getState();
+        const duration = startTime ? (Date.now() - startTime) / 1000 : 0;
+        const sessionStats = {
+            wpm,
+            accuracy,
+            duration,
+            mistakes: errorCount,
+            isPerfect: errorCount === 0 && accuracy === 100
+        };
 
-        // Base XP for finishing a lesson
-        let earnedXp = 50;
-        // Bonus for accuracy
-        if (accuracy >= 98) earnedXp += 20;
-        // Bonus for speed
-        if (wpm > 40) earnedXp += 10;
-
-        addXp(earnedXp);
-
-        // Check for new badges
-        const unlocked = checkBadges({ wpm, accuracy });
-        if (unlocked.length > 0) {
-            console.log("NEW BADGES UNLOCKED:", unlocked.map(b => b.title));
-            // In future: Trigger UI Toast
-            soundManager.playSuccess(); // Extra sound
-        }
+        // Award XP and Check Badges
+        useProgressStore.getState().addSession(sessionStats);
+        useProgressStore.getState().checkStreak();
         // ----------------------------
 
         const weakestKeys = TypingAnalytics.getWeakestKeys(keystrokes);
@@ -208,46 +254,62 @@ export const useTypingStore = create<TypingState>((set, get) => ({
             consistency,
             weakestKeys,
             timestamp: Date.now(),
-            mode: 'practice'
+            mode: 'practice',
+            ...metadata
         };
 
-        if (!user) {
-            // Save to localStorage for guests
-            const existing = JSON.parse(localStorage.getItem('deepeye_guest_sessions') || '[]');
-            localStorage.setItem('deepeye_guest_sessions', JSON.stringify([sessionData, ...existing].slice(0, 50)));
-            console.log("Guest Session Saved Locally!");
+        if (typeof localStorage !== 'undefined') {
+            const localHistory = JSON.parse(localStorage.getItem('deepeye_local_cache') || '[]');
+            localStorage.setItem('deepeye_local_cache', JSON.stringify([sessionData, ...localHistory].slice(0, 100)));
+
+            if (!user) {
+                const existing = JSON.parse(localStorage.getItem('deepeye_guest_sessions') || '[]');
+                localStorage.setItem('deepeye_guest_sessions', JSON.stringify([sessionData, ...existing].slice(0, 50)));
+                return;
+            }
+        } else if (!user) {
             return;
         }
 
         try {
-            // 1. Save Session Detail
             await addDoc(collection(db, 'users', user.uid, 'sessions'), {
                 ...sessionData,
                 timestamp: serverTimestamp(),
             });
 
-            // 2. Update Leaderboard if this is a personal best
             const leaderboardRef = doc(db, 'leaderboard', user.uid);
             const lbSnap = await getDoc(leaderboardRef);
             const currentLbData = lbSnap.exists() ? lbSnap.data() : null;
 
-            if (!currentLbData || wpm > currentLbData.wpm) {
+            // Get current highestWpm and totalRaces
+            const currentHighestWpm = currentLbData?.highestWpm || 0;
+            const currentTotalRaces = currentLbData?.totalRaces || 0;
+            const isNewPersonalBest = wpm > currentHighestWpm;
+
+            // Update leaderboard with new personal best and race count
+            if (!currentLbData || isNewPersonalBest) {
                 await setDoc(leaderboardRef, {
                     userId: user.uid,
                     displayName: user.displayName || 'Anonymous Operative',
                     photoURL: user.photoURL,
                     wpm,
+                    highestWpm: isNewPersonalBest ? wpm : currentHighestWpm,
+                    totalRaces: currentTotalRaces + 1,
+                    lastWpm: wpm,
                     accuracy,
                     timestamp: serverTimestamp()
                 }, { merge: true });
-                console.log("Leaderboard Record Updated!");
+            } else {
+                // Just increment race count for regular sessions
+                await setDoc(leaderboardRef, {
+                    totalRaces: currentTotalRaces + 1,
+                    lastWpm: wpm,
+                    wpm: Math.max(wpm, currentHighestWpm), // Keep highest
+                    timestamp: serverTimestamp()
+                }, { merge: true });
             }
-
-            console.log("Cloud Session Saved!");
         } catch (e) {
             console.error("Error saving session:", e);
         }
     }
 }));
-
-

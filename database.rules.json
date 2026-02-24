@@ -1,0 +1,32 @@
+{
+    "rules": {
+        "arenas": {
+            "$arenaId": {
+                ".read": "auth != null",
+                ".write": "auth != null",
+                "participants": {
+                    "$uid": {
+                        ".write": "$uid === auth.uid",
+                        ".validate": "newData.hasChildren(['progress', 'wpm', 'displayName'])"
+                    }
+                }
+            }
+        },
+        "fleets": {
+            "$fleetId": {
+                ".read": "auth != null",
+                "presence": {
+                    "$uid": {
+                        ".write": "$uid === auth.uid"
+                    }
+                }
+            }
+        },
+        "presence": {
+            "$uid": {
+                ".read": "true",
+                ".write": "$uid === auth.uid"
+            }
+        }
+    }
+}

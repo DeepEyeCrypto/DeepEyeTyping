@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",
@@ -12,8 +12,10 @@
   "type": "module",
   "peerDependencies": {
     "firebase": "^12.8.0",
-    "zustand": "^5.0.10",
-    "react": "^19.2.0"
+    "react": "^19.2.0",
+    "zustand": "^5.0.10"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "vitest": "^4.0.18"
+  }
 }

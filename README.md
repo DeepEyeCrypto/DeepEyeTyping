@@ -1,4 +1,4 @@
-# DeepEye.Typing: Neural Interface Training Protocol
+# DeepEyeTyping: Neural Interface Training Protocol
 
 [![DeepEye Banner](https://via.placeholder.com/1200x400/05050a/00fff2?text=DeepEye.Typing+Neural+Sync)](https://deepeye.systems)
 
@@ -12,13 +12,11 @@
 ## 🌟 Advanced Operative Features
 
 - **Liquid Glass Aesthetic:** Premium Vision Pro-inspired UI with real-time blur, neon flows, and 60FPS animations.
-- **Neural Analytics Engine:** caracter-level tracking with AI-powered diagnostics for rhythm, hesitation, and speed traps.
-- **Global Standing Protocol:** Real-time global leaderboards synchronized via Firebase.
-- **God Mode Protocol:** Intense visual feedback and screen-shake for error detection during high-velocity drills.
-- **Certification Exams:** Strict "Sudden Death" typing tests (Alpha, Beta Classes) to validate your operative tier.
-- **Gamification & Honors:** Earn XP, gain Clearance Levels, and unlock holographic Badges.
-- **Sound Synthesis:** Procedural WebAudio SFX engine providing tactile haptic-style feedback.
-- **Cloud Infrastructure:** Cross-device sync for stats, progress, and rankings via Firebase.
+- **Neural Deck (3D):** Interactive WebGL biometric visualization hub for deep performance profiling.
+- **Protocol Architect:** Custom training Forge to build and share technical typing fragments.
+- **Fleet HQ:** Collaborative team infrastructure for squad-based ranking and live spectating.
+- **Sentinel Reliability:** Automatic LocalStorage failover for offline-resilient training.
+- **Logistics Pipeline:** Cross-platform CI/CD for Universal macOS and Web hub deployments.
 
 ---
 
@@ -65,6 +63,7 @@ npm run dev -w web
 | `TAB` | Cycle Protocol Protocols |
 | `AUTH` | Initialize Cloud Identity Sync |
 | `GOD` | Toggle High-Velocity Feedback Mode |
+| `DECK` | 3D Biometric Visualization |
 
 ---
 

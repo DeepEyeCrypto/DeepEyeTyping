@@ -27,8 +27,8 @@ export const useProgressSync = () => {
                     console.log("[Sync] No remote progress found. Initializing...");
                     const localState = useProgressStore.getState();
                     // Strip functions
-                    const { xp, level, unlockedBadges, lifetimeStats } = localState;
-                    await setDoc(docRef, { xp, level, unlockedBadges, lifetimeStats });
+                    const { xp, level, badges, lifetimeStats } = localState;
+                    await setDoc(docRef, { xp, level, badges, lifetimeStats });
                 }
             } catch (err) {
                 console.error("[Sync] Error loading progress:", err);
@@ -39,12 +39,12 @@ export const useProgressSync = () => {
 
         // Push updates to cloud
         const unsubStore = useProgressStore.subscribe((state, prevState) => {
-            if (state.xp !== prevState.xp || state.unlockedBadges.length !== prevState.unlockedBadges.length) {
+            if (state.xp !== prevState.xp || state.badges.length !== prevState.badges.length) {
                 // Debounce simple: just fire and maybe throttle firebase logic?
                 // For now, simple write.
                 const docRef = doc(db, 'users', user.uid, 'progress', 'main');
-                const { xp, level, unlockedBadges, lifetimeStats } = state;
-                setDoc(docRef, { xp, level, unlockedBadges, lifetimeStats }, { merge: true })
+                const { xp, level, badges, lifetimeStats } = state;
+                setDoc(docRef, { xp, level, badges, lifetimeStats }, { merge: true })
                     .catch(e => console.error("[Sync] Push failed", e));
             }
         });

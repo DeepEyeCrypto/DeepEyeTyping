@@ -39,23 +39,25 @@ const GLOW_TRANSITION = { duration: 1.5, repeat: Infinity };
 const Key = React.memo(({ k, isActive, isPressed, heatValue }: { k: KeyConfig, isActive: boolean, isPressed: boolean, heatValue: number }) => {
     const fingerColor = FINGER_COLORS[k.finger];
 
+    // PERFORMANCE FIX: Memoize styles to prevent object recreation
     const style = useMemo(() => ({
-        width: `${(k.width || 1) * 3.2}rem`,
-        height: '3.2rem',
+        width: `${(k.width || 1) * 2.8}em`,
+        height: '2.8em',
         backgroundColor: heatValue > 0 ? `rgba(239, 68, 68, ${Math.min(0.6, heatValue * 0.4)})` : undefined,
         borderColor: heatValue > 0 ? `rgba(239, 68, 68, ${Math.min(1, heatValue)})` : undefined,
     }), [k.width, heatValue]);
 
-    const indicatorStyle = useMemo(() => ({ backgroundColor: fingerColor, boxShadow: `0 0 8px ${fingerColor}` }), [fingerColor]);
+    const indicatorStyle = useMemo(() => ({ backgroundColor: fingerColor, boxShadow: `0 0 5px ${fingerColor}` }), [fingerColor]);
     const targetGlowStyle = useMemo(() => ({
         boxShadow: `inset 0 0 15px ${fingerColor}`,
         border: `1px solid ${fingerColor}`
     }), [fingerColor]);
     const targetBarStyle = useMemo(() => ({ backgroundColor: fingerColor }), [fingerColor]);
 
+    // PERFORMANCE FIX: Remove `layout` prop - it's extremely expensive for keyboard with 50+ keys
+    // Use transform instead for position changes
     return (
         <motion.div
-            layout
             variants={KEY_VARIANTS}
             animate={isPressed ? 'pressed' : isActive ? 'active' : 'idle'}
             className={`
@@ -69,7 +71,7 @@ const Key = React.memo(({ k, isActive, isPressed, heatValue }: { k: KeyConfig, i
             `}
             style={style}
         >
-            <span className={`font-mono text-[11px] font-black tracking-widest ${isActive || isPressed ? 'text-white' : ''}`}>
+            <span className={`font-mono text-[1.2em] font-black tracking-widest ${isActive || isPressed ? 'text-white' : ''}`}>
                 {k.label}
             </span>
 
@@ -113,14 +115,14 @@ const Key = React.memo(({ k, isActive, isPressed, heatValue }: { k: KeyConfig, i
 
 export const VirtualKeyboard = ({ activeKey, pressedKey, heatMap = {} }: VirtualKeyboardProps) => {
     return (
-        <div className="flex flex-col gap-3 p-8 rounded-[40px] bg-black/40 backdrop-blur-3xl border border-white/5 w-full max-w-5xl mx-auto shadow-2xl relative">
+        <div className="flex flex-col gap-[0.4em] p-[1em] md:p-[1.5em] rounded-[1.5em] md:rounded-[2em] bg-black/40 backdrop-blur-3xl border border-white/5 w-full max-w-[65em] mx-auto shadow-2xl relative text-[9px] sm:text-[11px] md:text-[14px] lg:text-[16px]">
             {/* Ambient Background Light */}
-            <div className="absolute inset-0 rounded-[40px] bg-gradient-to-b from-white/2 to-transparent pointer-events-none" />
-            <div className="absolute -top-1/2 left-1/2 -translate-x-1/2 w-full h-full bg-neon-cyan/5 blur-[120px] pointer-events-none" />
+            <div className="absolute inset-0 rounded-[30px] bg-gradient-to-b from-white/2 to-transparent pointer-events-none" />
+            <div className="absolute -top-1/2 left-1/2 -translate-x-1/2 w-full h-full bg-neon-cyan/5 blur-[80px] pointer-events-none" />
 
             {/* Grid Rendering */}
             {QWERTY_LAYOUT.map((row, rowIndex) => (
-                <div key={rowIndex} className="flex gap-3 justify-center">
+                <div key={rowIndex} className="flex gap-[0.4em] justify-center">
                     {row.map((key) => (
                         <Key
                             key={key.code}
@@ -134,15 +136,15 @@ export const VirtualKeyboard = ({ activeKey, pressedKey, heatMap = {} }: Virtual
             ))}
 
             {/* Finger Guide Legend */}
-            <div className="mt-8 flex justify-center gap-8 border-t border-white/5 pt-6 opacity-40">
-                <div className="flex items-center gap-6">
+            <div className="mt-4 flex flex-wrap justify-center gap-4 md:gap-8 border-t border-white/5 pt-4 opacity-40">
+                <div className="flex items-center gap-4">
                     <LegendItem label="Pinky" color={FINGER_COLORS.L_PINKY} />
                     <LegendItem label="Ring" color={FINGER_COLORS.L_RING} />
                     <LegendItem label="Middle" color={FINGER_COLORS.L_MIDDLE} />
                     <LegendItem label="Index" color={FINGER_COLORS.L_INDEX} />
                 </div>
-                <div className="h-6 w-px bg-white/10" />
-                <div className="flex items-center gap-6">
+                <div className="hidden md:block h-6 w-px bg-white/10" />
+                <div className="flex items-center gap-4">
                     <LegendItem label="Index" color={FINGER_COLORS.R_INDEX} />
                     <LegendItem label="Middle" color={FINGER_COLORS.R_MIDDLE} />
                     <LegendItem label="Ring" color={FINGER_COLORS.R_RING} />
@@ -150,7 +152,7 @@ export const VirtualKeyboard = ({ activeKey, pressedKey, heatMap = {} }: Virtual
                 </div>
             </div>
 
-            <div className="absolute bottom-4 right-8">
+            <div className="absolute bottom-2 right-6 hidden md:block">
                 <span className="text-[8px] font-black uppercase tracking-[0.4em] text-white/10">Neural Input Surface v2</span>
             </div>
         </div>

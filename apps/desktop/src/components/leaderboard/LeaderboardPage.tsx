@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { useLeaderboard } from 'core';
+import { useLeaderboard, BADGE_STYLES, type BadgeTier } from 'core';
 import type { LeaderboardEntry } from 'core';
-import { Trophy, Globe, Zap, Target, Crown, Award, User as UserIcon } from 'lucide-react';
+import { Trophy, Globe, Zap, Target, Crown, Award, User as UserIcon, Diamond, Gem } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const CONTAINER_VARIANTS = {
@@ -12,6 +12,22 @@ const CONTAINER_VARIANTS = {
 const ITEM_VARIANTS = {
     initial: { opacity: 0, x: -20 },
     animate: { opacity: 1, x: 0 }
+};
+
+// Emerald theme glow for top tiers
+const getEmeraldGlow = (badge?: BadgeTier) => {
+    if (badge === 'emerald' || badge === 'diamond') {
+        return 'shadow-[0_0_30px_rgba(80,200,120,0.3)]';
+    }
+    return '';
+};
+
+const getBadgeIcon = (badge?: BadgeTier) => {
+    switch (badge) {
+        case 'diamond': return <Diamond size={14} />;
+        case 'emerald': return <Gem size={14} />;
+        default: return null;
+    }
 };
 
 export const LeaderboardPage = () => {
@@ -87,11 +103,24 @@ export const LeaderboardPage = () => {
 const PodiumCard = ({ entry, rank }: { entry: LeaderboardEntry, rank: number }) => {
     const isGold = rank === 1;
     const isSilver = rank === 2;
+    const badge = entry.badge || 'bronze';
+    const badgeStyle = BADGE_STYLES[badge];
+    const isEmeraldOrAbove = badge === 'emerald' || badge === 'diamond';
+
+    const badgeContainerStyle = useMemo(() => ({
+        backgroundColor: badgeStyle.glow,
+        color: badgeStyle.color,
+        border: `1px solid ${badgeStyle.color}`
+    }), [badgeStyle.glow, badgeStyle.color]);
+
+    const borderStyle = useMemo(() => ({ borderColor: badgeStyle.color }), [badgeStyle.color]);
+    const colorStyle = useMemo(() => ({ color: badgeStyle.color }), [badgeStyle.color]);
 
     return (
         <div className={`
             glass-card p-6 flex flex-col items-center text-center gap-4 relative overflow-hidden group transition-all duration-500 hover:-translate-y-2
             ${isGold ? 'border-neon-cyan bg-neon-cyan/5 shadow-[0_0_50px_rgba(0,255,242,0.1)]' : 'border-white/10'}
+            ${isEmeraldOrAbove ? 'shadow-[0_0_30px_rgba(80,200,120,0.2)]' : ''}
         `}>
             {/* Rank Badge */}
             <div className={`
@@ -101,12 +130,21 @@ const PodiumCard = ({ entry, rank }: { entry: LeaderboardEntry, rank: number }) 
                 #{rank}
             </div>
 
+            {/* Badge Tier Indicator */}
+            <div
+                className="absolute top-4 right-4 flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-black uppercase"
+                style={badgeContainerStyle}
+            >
+                {getBadgeIcon(badge)}
+                {badgeStyle.label}
+            </div>
+
             {/* Avatar */}
             <div className="relative mt-8">
                 {entry.photoURL ? (
-                    <img src={entry.photoURL} alt="" className="w-20 h-20 rounded-full border-2 border-white/10" />
+                    <img src={entry.photoURL} alt="" className="w-20 h-20 rounded-full border-2" style={borderStyle} />
                 ) : (
-                    <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center border-2 border-white/10">
+                    <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center border-2" style={borderStyle}>
                         <UserIcon size={32} className="text-white/20" />
                     </div>
                 )}
@@ -125,7 +163,7 @@ const PodiumCard = ({ entry, rank }: { entry: LeaderboardEntry, rank: number }) 
             <div className="flex gap-4 w-full mt-4">
                 <div className="flex-1 p-3 bg-white/2 rounded-xl border border-white/5">
                     <span className="text-[9px] text-white/30 uppercase font-black block mb-1">Velocity</span>
-                    <div className="flex items-center justify-center gap-1 text-neon-cyan font-mono font-bold">
+                    <div className="flex items-center justify-center gap-1 font-mono font-bold" style={colorStyle}>
                         <Zap size={10} />
                         {entry.wpm}
                     </div>
@@ -147,26 +185,40 @@ const PodiumCard = ({ entry, rank }: { entry: LeaderboardEntry, rank: number }) 
     );
 };
 
-const LeaderboardRow = ({ entry }: { entry: LeaderboardEntry }) => (
-    <motion.div
-        variants={ITEM_VARIANTS}
-        className="px-4 py-4 border-b border-white/5 grid grid-cols-12 items-center hover:bg-white/5 transition-all group"
-    >
-        <div className="col-span-1 pl-4 font-mono font-bold text-white/40 group-hover:text-neon-cyan">#{entry.rank}</div>
-        <div className="col-span-5 flex items-center gap-3">
-            {entry.photoURL ? (
-                <img src={entry.photoURL} alt="" className="w-8 h-8 rounded-full border border-white/10" />
-            ) : (
-                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-                    <UserIcon size={14} className="text-white/20" />
-                </div>
-            )}
-            <span className="font-bold text-white group-hover:translate-x-1 transition-transform">{entry.displayName}</span>
-        </div>
-        <div className="col-span-2 text-center font-mono font-bold text-neon-cyan">{entry.wpm}</div>
-        <div className="col-span-2 text-center font-mono font-bold text-neon-purple">{entry.accuracy}%</div>
-        <div className="col-span-2 text-right pr-4 text-[10px] text-white/20 font-mono">
-            {entry.timestamp?.seconds ? new Date(entry.timestamp.seconds * 1000).toLocaleDateString() : 'Awaiting...'}
-        </div>
-    </motion.div>
-);
+const LeaderboardRow = ({ entry }: { entry: LeaderboardEntry }) => {
+    const badge = entry.badge || 'bronze';
+    const badgeStyle = BADGE_STYLES[badge];
+    const isEmeraldOrAbove = badge === 'emerald' || badge === 'diamond';
+
+    const borderStyle = useMemo(() => ({ borderColor: badgeStyle.color }), [badgeStyle.color]);
+    const colorStyle = useMemo(() => ({ color: badgeStyle.color }), [badgeStyle.color]);
+
+    return (
+        <motion.div
+            variants={ITEM_VARIANTS}
+            className={`px-4 py-4 border-b border-white/5 grid grid-cols-12 items-center hover:bg-white/5 transition-all group ${getEmeraldGlow(badge)}`}
+        >
+            <div className="col-span-1 pl-4 font-mono font-bold text-white/40 group-hover:text-neon-cyan">#{entry.rank}</div>
+            <div className="col-span-4 flex items-center gap-3">
+                {entry.photoURL ? (
+                    <img src={entry.photoURL} alt="" className="w-8 h-8 rounded-full border" style={borderStyle} />
+                ) : (
+                    <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border" style={borderStyle}>
+                        <UserIcon size={14} className="text-white/20" />
+                    </div>
+                )}
+                <span className="font-bold text-white group-hover:translate-x-1 transition-transform">{entry.displayName}</span>
+                {isEmeraldOrAbove && (
+                    <span className="text-[10px]" style={colorStyle}>
+                        {getBadgeIcon(badge)}
+                    </span>
+                )}
+            </div>
+            <div className="col-span-3 text-center font-mono font-bold" style={colorStyle}>{entry.wpm}</div>
+            <div className="col-span-2 text-center font-mono font-bold text-neon-purple">{entry.accuracy}%</div>
+            <div className="col-span-2 text-right pr-4 text-[10px] text-white/20 font-mono">
+                {entry.timestamp?.seconds ? new Date(entry.timestamp.seconds * 1000).toLocaleDateString() : 'Awaiting...'}
+            </div>
+        </motion.div>
+    );
+};

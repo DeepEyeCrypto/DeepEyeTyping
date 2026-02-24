@@ -4,11 +4,11 @@ import type { Badge } from 'core';
 import { Award, Lock, CheckCircle2, Trophy, Zap, Target, Activity, Crown, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const TIER_STYLING = {
-    C: { color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-400/20', glow: 'shadow-blue-400/20' },
-    B: { color: 'text-green-400', bg: 'bg-green-400/10', border: 'border-green-400/20', glow: 'shadow-green-400/20' },
-    A: { color: 'text-neon-purple', bg: 'bg-neon-purple/10', border: 'border-neon-purple/20', glow: 'shadow-neon-purple/20' },
-    S: { color: 'text-neon-cyan', bg: 'bg-neon-cyan/10', border: 'border-neon-cyan/20', glow: 'shadow-neon-cyan/50' }
+const RARITY_STYLING = {
+    common: { color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-400/20', glow: 'shadow-blue-400/20', label: 'C' },
+    rare: { color: 'text-green-400', bg: 'bg-green-400/10', border: 'border-green-400/20', glow: 'shadow-green-400/20', label: 'B' },
+    epic: { color: 'text-neon-purple', bg: 'bg-neon-purple/10', border: 'border-neon-purple/20', glow: 'shadow-neon-purple/20', label: 'A' },
+    legendary: { color: 'text-neon-cyan', bg: 'bg-neon-cyan/10', border: 'border-neon-cyan/20', glow: 'shadow-neon-cyan/50', label: 'S' }
 };
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -28,7 +28,7 @@ const PROGRESS_INITIAL = { width: 0 };
 const PROGRESS_TRANSITION = { duration: 1.5, ease: 'easeOut' as const };
 
 const BadgeCard = ({ badge, isUnlocked }: { badge: Badge, isUnlocked: boolean }) => {
-    const style = TIER_STYLING[badge.tier as keyof typeof TIER_STYLING];
+    const style = RARITY_STYLING[badge.rarity as keyof typeof RARITY_STYLING] || RARITY_STYLING.common;
     const Icon = ICON_MAP[badge.icon] || Award;
 
     return (
@@ -43,7 +43,7 @@ const BadgeCard = ({ badge, isUnlocked }: { badge: Badge, isUnlocked: boolean })
         >
             {/* Tier Indicator */}
             <div className={`absolute top-3 right-3 text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border ${isUnlocked ? style.border + ' ' + style.color : 'border-white/5 text-white/20'}`}>
-                {badge.tier}
+                {style.label}
             </div>
 
             {/* Icon Sphere */}
@@ -90,7 +90,7 @@ const BadgeCard = ({ badge, isUnlocked }: { badge: Badge, isUnlocked: boolean })
 };
 
 export const AchievementsPage = () => {
-    const { unlockedBadges } = useProgressStore();
+    const unlockedBadges = useProgressStore((state) => state.badges || []);
 
     const { unlockedIds, progressPercent, statItems } = useMemo(() => {
         const ids = new Set(unlockedBadges);
@@ -101,7 +101,7 @@ export const AchievementsPage = () => {
         const items = [
             { label: 'Total Honors', value: total, icon: Award, color: 'text-white' },
             { label: 'Synced', value: count, icon: CheckCircle2, color: 'text-neon-cyan' },
-            { label: 'S-Tier Rank', value: BADGES.filter(b => b.tier === 'S' && ids.has(b.id)).length, icon: Crown, color: 'text-neon-purple' },
+            { label: 'S-Tier Rank', value: BADGES.filter(b => b.rarity === 'legendary' && ids.has(b.id)).length, icon: Crown, color: 'text-neon-purple' },
             { label: 'Unlocking', value: total - count, icon: Lock, color: 'text-white/20' }
         ];
 

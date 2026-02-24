@@ -1,0 +1,30 @@
+
+> desktop@0.0.0 lint
+> eslint .
+
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/architect/ProtocolArchitect.tsx
+  116:24  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/dashboard/DashboardPage.tsx
+  216:22  warning  Unused eslint-disable directive (no problems were reported from 'react-perf/jsx-no-new-object-as-prop')
+  230:26  warning  Unused eslint-disable directive (no problems were reported from 'react-perf/jsx-no-new-array-as-prop')
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/layout/AppShell.tsx
+  74:30  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/settings/SettingsPage.tsx
+   42:26  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  139:46  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  232:99  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  262:59  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  276:70  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+
+/Users/enayat/Documents/DeepEyeTyping/apps/desktop/src/components/typing/TrainingPage.tsx
+  24:24  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  28:34  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+  32:35  warning  JSX attribute values should not contain functions created in the same scope  react-perf/jsx-no-new-function-as-prop
+
+✖ 12 problems (0 errors, 12 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
+
