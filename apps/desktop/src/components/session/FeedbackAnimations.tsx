@@ -123,8 +123,6 @@ const BADGE_UNLOCK_STYLES = {
     description: "text-white/60 text-sm"
 };
 
-import { useMemo } from 'react';
-
 const UNLOCK_WRAPPER_TRANS = { type: 'spring' as const, duration: 0.8 };
 
 export function BadgeUnlock({ badge, isVisible, onComplete }: BadgeUnlockProps) {
